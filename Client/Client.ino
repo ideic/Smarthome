@@ -1,43 +1,33 @@
-#define PIN_SWITCH 2
+
 #define MyAddress B11110001
 #define ServerAddress B11110000
 
 #include <Arduino.h>
 #include "SmartHomeCommunication.h"
+#include "DeviceHandler.h"
 
 SHCommunication _com = SHCommunication();
+DeviceBase* _device;
 
 void setup() {
   Serial.begin(9600, SERIAL_8E1);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
-  pinMode(PIN_SWITCH, INPUT); 
-  digitalWrite(PIN_SWITCH, HIGH);
-
-  _com.SetUp();  
+  _device = DeviceFactory::GetDevice(LightSwitchDeviceType);
+  _com.SetUp();
+  _device->SetUp();  
 }
 
 void loop() {
   
   if (_com.WeGotMessage(MyAddress)) 
   {
-     bool isLightOn = false;
-     isLightOn = GetLightState();
-     _com.SendMessage(MyAddress, ServerAddress,   isLightOn ? MSG_LIGHT_ON : MSG_LIGHT_OFF);
+     // in case of get
+     bool isDeviceOn = _device->IsDeviceOn();
+     _com.SendMessage(MyAddress, ServerAddress,   isDeviceOn ? MSG_DEVICE_ON : MSG_DEVICE_OFF);
   }
   delay(20);
 }
 
-bool GetLightState() {
-  bool isLightOn = false;
-  if (digitalRead(PIN_SWITCH) == LOW) {
-    // Wait 5 miliseconds, because of perk effect
-    delay(5);
-    if (digitalRead(PIN_SWITCH) == LOW) {
-      isLightOn = true;
-    }
-  }
-  return isLightOn; 
-}
 

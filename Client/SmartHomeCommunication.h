@@ -3,8 +3,8 @@
 
 #include "RS485Handler.h"
 
-#define MSG_LIGHT_ON B00110011
-#define MSG_LIGHT_OFF B00111100
+#define MSG_DEVICE_ON B00110011
+#define MSG_DEVICE_OFF B00111100
 
 
 class SHCommunication {
