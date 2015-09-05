@@ -1,7 +1,7 @@
 #include "SmartHomeCommunication.h"
 
-#define CMD_GET B11000011
-#define CMD_SET B00001100
+
+
 
 #define START B11110000
 #define STOP B00001111
@@ -14,7 +14,7 @@
 #define MESSAGE_POS_STOP 4
 #define MESSAGE_POS_LRC 6
 
-SHCommunication::SHCommunication() : _lastMessage(0) {
+SHCommunication::SHCommunication() : _lastMessage(0), _lastFrom(0) {
   _rs485Reader = RS485Handler();
 };
 
@@ -30,12 +30,14 @@ bool SHCommunication::WeGotMessage (int myAddress) {
     if (data == -1) return false;
 
     _lastMessage = 0;
+    _lastFrom = 0;
     dataChunks[i] = data;
   }
   
   if (DataValidationFailed(dataChunks)) return false;
   
   _lastMessage = dataChunks[MESSAGE_POS_MESSAGE];
+  _lastFrom = dataChunks[MESSAGE_POS_FROM];
   
   return  (dataChunks[MESSAGE_POS_FROM] == myAddress); 
 };
@@ -45,12 +47,17 @@ bool SHCommunication::WeGotGETMessage() {
 };
 
 bool SHCommunication::WeGotSETMessage() {
-    return (_lastMessage & 0x0F) == B00001100;  
+    return _lastMessage== CMD_SET_ON || _lastMessage== CMD_SET_OFF;  
 };
 
 bool SHCommunication::SetMessageIsOn(){
-  return (_lastMessage & 0xF0) == B11000000; 
+  return _lastMessage == CMD_SET_ON; 
 };
+
+byte SHCommunication::From(){
+  return _lastFrom; 
+};
+
 
 bool SHCommunication::DataValidationFailed(byte dataChunks[]) {
 
