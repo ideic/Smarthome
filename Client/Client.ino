@@ -23,9 +23,14 @@ void loop() {
   
   if (_com.WeGotMessage(MyAddress)) 
   {
-     // in case of get
-     bool isDeviceOn = _device->IsDeviceOn();
-     _com.SendMessage(MyAddress, ServerAddress,   isDeviceOn ? MSG_DEVICE_ON : MSG_DEVICE_OFF);
+     if (_com.WeGotGETMessage()) {
+       // in case of get
+       bool isDeviceOn = _device->IsDeviceOn();
+       _com.SendMessage(MyAddress, ServerAddress,   isDeviceOn ? MSG_DEVICE_ON : MSG_DEVICE_OFF);
+     } else if (_com.WeGotSETMessage()) {
+       _device->SetDeviceState(_com.SetMessageIsOn());
+         
+     }
   }
   delay(20);
 }

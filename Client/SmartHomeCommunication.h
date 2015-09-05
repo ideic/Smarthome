@@ -11,6 +11,9 @@ class SHCommunication {
   public:
      SHCommunication();
      bool WeGotMessage (int myAddress);
+     bool WeGotGETMessage();
+     bool WeGotSETMessage();
+     bool SetMessageIsOn();
      void  SendMessage(byte from, byte to,  byte msg);
      void SetUp();
      
@@ -19,6 +22,7 @@ class SHCommunication {
     byte CalculateCRC(byte chunks[]);
   
     RS485Handler _rs485Reader;
+    byte _lastMessage;
 };
 
 #endif

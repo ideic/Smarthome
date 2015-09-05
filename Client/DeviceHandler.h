@@ -9,6 +9,7 @@ class DeviceBase {
   public:
      virtual void SetUp(){};
      virtual bool IsDeviceOn() {return false;}
+     virtual void SetDeviceState (bool isOn) {};
 };
 
 class LightSwitchDevice: public DeviceBase {
@@ -22,6 +23,7 @@ class RelayDevice: public DeviceBase {
      RelayDevice();
      virtual void SetUp();
      virtual bool IsDeviceOn();
+     virtual void SetDeviceState (bool isOn);
     private:
       bool _isRelayOn;
  };
