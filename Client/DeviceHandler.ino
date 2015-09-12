@@ -1,30 +1,33 @@
 #include "DeviceHandler.h"
-#define PIN_SWITCH 2
-#define PIN_RELAY 4
+
+DeviceBase::DeviceBase(int address, int pinNumber) : _address(-1), _pinNumber(-1) {};
+
+LightSwitchDevice::LightSwitchDevice(int address, int pinNumber) :  DeviceBase (address, pinNumber) {
+};
 
 void LightSwitchDevice::SetUp(){
-  pinMode(PIN_SWITCH, INPUT); 
-  digitalWrite(PIN_SWITCH, HIGH);
+  pinMode(GetPinNumber(), INPUT); 
+  digitalWrite(GetPinNumber(), HIGH);
 };
 
 bool LightSwitchDevice::IsDeviceOn(){
   bool isLightOn = false;
-  if (digitalRead(PIN_SWITCH) == LOW) {
+  if (digitalRead(GetPinNumber()) == LOW) {
     // Wait 5 miliseconds, because of perk effect
     delay(5);
-    if (digitalRead(PIN_SWITCH) == LOW) {
+    if (digitalRead(GetPinNumber()) == LOW) {
       isLightOn = true;
     }
   }
   return isLightOn; 
 }
 
-RelayDevice::RelayDevice(): _isRelayOn(false) {
+RelayDevice::RelayDevice(int address, int pinNumber) :  DeviceBase (address, pinNumber), _isRelayOn(false){
 };
 
 void RelayDevice::SetUp(){
-  pinMode(PIN_RELAY, OUTPUT); 
-  digitalWrite(PIN_RELAY, LOW);
+  pinMode(GetPinNumber(), OUTPUT); 
+  digitalWrite(GetPinNumber(), LOW);
 };
 
 bool RelayDevice::IsDeviceOn(){
@@ -32,7 +35,8 @@ bool RelayDevice::IsDeviceOn(){
 };
 
 void RelayDevice::SetDeviceState (bool isOn) {
-  digitalWrite(PIN_RELAY, isOn ? HIGH : LOW);
+  digitalWrite(GetPinNumber(), isOn ? HIGH : LOW);
   _isRelayOn = isOn;
 };
 
+EmptyDevice::EmptyDevice () : DeviceBase(-1, -1) {};
