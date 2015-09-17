@@ -40,6 +40,11 @@ Device _relays[10];
 SHCommunication _com = SHCommunication();
 
 void setup() {
+  Serial.begin(9600, SERIAL_8E1);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for Leonardo only
+  }
+  
   _deviceSegments [0] = SegmentState(SegmentN, false);
   _deviceSegments [1] = SegmentState(SegmentE, false);
   _deviceSegments [2] = SegmentState(SegmentK, false);
@@ -81,6 +86,7 @@ void loop() {
     if (segmentId != _switches[switchIndex]._id) {
         if (segmentStateChanged) {
           _deviceSegments [segmentId]._isSegmentOn =  !_deviceSegments [segmentId]._isSegmentOn;
+          Serial.println(F("Change Releay state"));
           ChangeSegmentRelaysState(segmentId);  
           segmentId = _switches[switchIndex]._id;
         }
@@ -90,6 +96,7 @@ void loop() {
 
     byte deviceState = GetDeviceState (_switches[switchIndex]._address);
     if (deviceState != 0 && deviceState != _switches[switchIndex]._state) {
+      Serial.println(F("deviceState changed"));
       _switches[switchIndex]._state = deviceState;
       segmentStateChanged = !segmentStateChanged;
     }

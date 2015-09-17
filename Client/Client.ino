@@ -33,12 +33,15 @@ void loop() {
   for (int i = 0; i<DevicesNumber; i++) {
     if (_com.WeGotMessage(_devices[i]->GetAddress())) 
     {
+       Serial.println(F("We got Message"));
        if (_com.WeGotGETMessage()) {
+         Serial.println(F("We got GET Message"));
          // in case of get
          bool isDeviceOn = _devices[i]->IsDeviceOn();
          _com.SendMessage(_devices[i]->GetAddress(), _com.From(),   isDeviceOn ? MSG_DEVICE_ON : MSG_DEVICE_OFF);
        } 
        else if (_com.WeGotSETMessage()) {
+         Serial.println(F("We got SET Message"));
          _devices[i]->SetDeviceState(_com.SetMessageIsOn());
        }
     }
