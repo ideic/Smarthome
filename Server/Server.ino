@@ -31,11 +31,10 @@ struct Device {
     byte _state;
   };
 
-
-
+#define SwitchNum 8
   
 SegmentState _deviceSegments[3];
-Device _switches[8];
+Device _switches[SwitchNum];
 Device _relays[10];
 SHCommunication _com = SHCommunication();
 
@@ -79,16 +78,14 @@ void setup() {
 void loop() {
   bool segmentStateChanged = false;
   
-  for (int switchIndex = 0; switchIndex<1; switchIndex++) {
+  for (int switchIndex = 0; switchIndex<SwitchNum; switchIndex++) {
  
     byte deviceState = GetDeviceState (_switches[switchIndex]._address);
     if (deviceState != 0 && deviceState != _switches[switchIndex]._state) {
-      Serial.println(F("deviceState changed"));
       _switches[switchIndex]._state = deviceState;
       
       int segmentId = _switches[switchIndex]._id;
       _deviceSegments [segmentId]._isSegmentOn =  !_deviceSegments [segmentId]._isSegmentOn;
-      Serial.println(F("Change Releay state"));
       ChangeSegmentRelaysState(segmentId);  
     }
   }
@@ -106,7 +103,7 @@ byte GetDeviceState(byte address) {
   
   bool timeOut = false;
  
-  while (!_com.WeGotMessage(ServerAddress)) {
+  while (!(_com.WeGotMessage() && _com.Address() == ServerAddress)) {
     if ((currentTime + 100) < millis()) {
          timeOut = true;
         break;
@@ -123,22 +120,12 @@ byte GetDeviceState(byte address) {
 
 void ChangeSegmentRelaysState(int segmentId) {
   int relayIndex = FindRelay(segmentId);
-  Serial.println("Relay Index");
-  Serial.println(relayIndex);
   for (;_relays[relayIndex]._id == segmentId; relayIndex++) {
     byte newState = _deviceSegments [segmentId]._isSegmentOn ?  CMD_SET_ON : CMD_SET_OFF;
-
-    Serial.println("SendMessage to relay");
-    Serial.println("address");
-    Serial.println(_relays[relayIndex]._address);
     
     _com.SendMessage(ServerAddress, _relays[relayIndex]._address, newState);
     delay(50);
     if (GetDeviceState(_relays[relayIndex]._address) != newState == CMD_SET_ON ?  MSG_DEVICE_ON : MSG_DEVICE_OFF) {
-      Serial.println("SendMessage to relay");
-      Serial.println("address");
-      Serial.println(_relays[relayIndex]._address);
-      
       _com.SendMessage(ServerAddress, _relays[relayIndex]._address, newState);
     }
   }

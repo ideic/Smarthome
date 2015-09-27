@@ -29,29 +29,32 @@ void setup() {
 }
 
 void loop() {
-
-  for (int i = 0; i<DevicesNumber; i++) {
-    if (_com.WeGotMessage(_devices[i]->GetAddress())) 
-    {
-      
+  DeviceBase* device = NULL;
+ 
+  if (_com.WeGotMessage()) {
+    device = FindDevice(_com.Address());
+    if (device != NULL) {
        if (_com.WeGotGETMessage()) {
          // in case of get
-         bool isDeviceOn = _devices[i]->IsDeviceOn();
+         bool isDeviceOn = device->IsDeviceOn();
          
-         _com.SendMessage(_devices[i]->GetAddress(), _com.From(),   isDeviceOn ? MSG_DEVICE_ON : MSG_DEVICE_OFF);
+         _com.SendMessage(device->GetAddress(), _com.From(),   isDeviceOn ? MSG_DEVICE_ON : MSG_DEVICE_OFF);
        } 
        else if (_com.WeGotSETMessage()) {
-         Serial.println("We got set message");
-
-         _devices[i]->SetDeviceState(_com.SetMessageIsOn());
+         device->SetDeviceState(_com.IsMessageSetOn());
        }
-       else {
-           Serial.println("We got UNKNOWN message");        
-         }
-       
     }
-  }
+  } 
+
   delay(20);
 }
 
-
+DeviceBase* FindDevice(byte address) {
+  for(int i = 0; i< DevicesNumber; i++) {
+    if (_devices[i]->GetAddress() == address) {
+      return _devices[i];
+    }  
+  }
+  
+  return NULL;  
+}

@@ -14,12 +14,13 @@
 class SHCommunication {
   public:
      SHCommunication();
-     bool WeGotMessage (byte myAddress);
+     bool WeGotMessage ();
      bool WeGotGETMessage();
      bool WeGotSETMessage();
      byte From();
      byte Message();
-     bool SetMessageIsOn();
+     byte Address();
+     bool IsMessageSetOn();
      void SendMessage(byte from, byte to,  byte msg);
      void SetUp();
      
@@ -30,6 +31,7 @@ class SHCommunication {
     RS485Handler _rs485Reader;
     byte _lastMessage;
     byte _lastFrom;
+    byte _lastAddress;
 };
 
 #endif
