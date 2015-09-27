@@ -1,6 +1,6 @@
 #include "DeviceHandler.h"
 
-DeviceBase::DeviceBase(int address, int pinNumber) : _address(-1), _pinNumber(-1) {};
+DeviceBase::DeviceBase(int address, int pinNumber) : _address(address), _pinNumber(pinNumber) {};
 
 LightSwitchDevice::LightSwitchDevice(int address, int pinNumber) :  DeviceBase (address, pinNumber) {
 };
@@ -12,6 +12,7 @@ void LightSwitchDevice::SetUp(){
 
 bool LightSwitchDevice::IsDeviceOn(){
   bool isLightOn = false;
+  
   if (digitalRead(GetPinNumber()) == LOW) {
     // Wait 5 miliseconds, because of perk effect
     delay(5);
