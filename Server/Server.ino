@@ -73,32 +73,23 @@ void setup() {
   _relays[8] = Device(SegmentK, KUL6, MSG_DEVICE_OFF);
   _relays[9] = Device(SegmentK, KUL7, MSG_DEVICE_OFF);
   
+  _com.SetUp();
 }
 
 void loop() {
-  
   bool segmentStateChanged = false;
   
-  int segmentId = -1;
-  for (int switchIndex = 0; switchIndex<8; switchIndex++) {
-    
-    //segment changed
-    if (segmentId != _switches[switchIndex]._id) {
-        if (segmentStateChanged) {
-          _deviceSegments [segmentId]._isSegmentOn =  !_deviceSegments [segmentId]._isSegmentOn;
-          Serial.println(F("Change Releay state"));
-          ChangeSegmentRelaysState(segmentId);  
-          segmentId = _switches[switchIndex]._id;
-        }
-        
-        segmentStateChanged = false;
-    }
-
+  for (int switchIndex = 0; switchIndex<1; switchIndex++) {
+ 
     byte deviceState = GetDeviceState (_switches[switchIndex]._address);
     if (deviceState != 0 && deviceState != _switches[switchIndex]._state) {
       Serial.println(F("deviceState changed"));
       _switches[switchIndex]._state = deviceState;
-      segmentStateChanged = !segmentStateChanged;
+      
+      int segmentId = _switches[switchIndex]._id;
+      _deviceSegments [segmentId]._isSegmentOn =  !_deviceSegments [segmentId]._isSegmentOn;
+      Serial.println(F("Change Releay state"));
+      ChangeSegmentRelaysState(segmentId);  
     }
   }
 }
@@ -114,6 +105,7 @@ byte GetDeviceState(byte address) {
   }
   
   bool timeOut = false;
+ 
   while (!_com.WeGotMessage(ServerAddress)) {
     if ((currentTime + 100) < millis()) {
          timeOut = true;
@@ -131,11 +123,22 @@ byte GetDeviceState(byte address) {
 
 void ChangeSegmentRelaysState(int segmentId) {
   int relayIndex = FindRelay(segmentId);
-  
+  Serial.println("Relay Index");
+  Serial.println(relayIndex);
   for (;_relays[relayIndex]._id == segmentId; relayIndex++) {
     byte newState = _deviceSegments [segmentId]._isSegmentOn ?  CMD_SET_ON : CMD_SET_OFF;
+
+    Serial.println("SendMessage to relay");
+    Serial.println("address");
+    Serial.println(_relays[relayIndex]._address);
+    
     _com.SendMessage(ServerAddress, _relays[relayIndex]._address, newState);
+    delay(50);
     if (GetDeviceState(_relays[relayIndex]._address) != newState == CMD_SET_ON ?  MSG_DEVICE_ON : MSG_DEVICE_OFF) {
+      Serial.println("SendMessage to relay");
+      Serial.println("address");
+      Serial.println(_relays[relayIndex]._address);
+      
       _com.SendMessage(ServerAddress, _relays[relayIndex]._address, newState);
     }
   }
