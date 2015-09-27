@@ -1,13 +1,19 @@
 #include <SoftwareSerial.h>
 #include "RS485Handler.h"
 
+#define RXPin        10  //Serial Receive pin
+#define TXPin        11  //Serial Transmit pin
+#define TxControl     12   //RS485 Direction control
+
+#define RS485Transmit    HIGH
+#define RS485Receive     LOW
+
 //Serial Communication on Rx Tx pins (not on standards
 SoftwareSerial RS485Serial(RXPin, TXPin); // RX, TX
 
 void RS485Handler::SetUp(){
     pinMode(TxControl, OUTPUT);    
     digitalWrite(TxControl, RS485Receive);  // Init Transceiver to Read     
-    
     RS485Serial.begin(4800);   // set the data rate 
     
   };
@@ -28,4 +34,5 @@ void RS485Handler::Write(byte data[], int dataSize) {
     for (int i = 0; i< dataSize; i++ ){
       RS485Serial.write(data[i]);  
     }
+    digitalWrite(TxControl, RS485Receive);  // Init Transceiver to Read     
 };
