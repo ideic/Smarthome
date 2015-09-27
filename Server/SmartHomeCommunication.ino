@@ -12,7 +12,7 @@
 #define MESSAGE_POS_TO 2
 #define MESSAGE_POS_MESSAGE 3
 #define MESSAGE_POS_STOP 4
-#define MESSAGE_POS_LRC 6
+#define MESSAGE_POS_LRC 5
 
 SHCommunication::SHCommunication() : _lastMessage(0), _lastFrom(0) {
   _rs485Reader = RS485Handler();
@@ -25,21 +25,24 @@ void SHCommunication::SetUp() {
 bool SHCommunication::WeGotMessage (byte myAddress) {
   byte dataChunks[MESSAGE_SIZE];
   
-  for (int i = 0 ; i< MESSAGE_SIZE; i++){
-    int data = _rs485Reader.Read();
+  int data = _rs485Reader.Read();
+  if (data != START) return false;
+  dataChunks[0] = data;
+  delay(5);
+  for (int i = 1 ; i< MESSAGE_SIZE; i++){
+    data = _rs485Reader.Read();
     if (data == -1) return false;
 
     _lastMessage = 0;
     _lastFrom = 0;
     dataChunks[i] = data;
   }
-  
   if (DataValidationFailed(dataChunks)) return false;
   
   _lastMessage = dataChunks[MESSAGE_POS_MESSAGE];
   _lastFrom = dataChunks[MESSAGE_POS_FROM];
-  
-  return  (dataChunks[MESSAGE_POS_FROM] == myAddress); 
+   
+  return  (dataChunks[MESSAGE_POS_TO] == myAddress); 
 };
 
 bool SHCommunication::WeGotGETMessage() {
@@ -66,19 +69,18 @@ bool SHCommunication::DataValidationFailed(byte dataChunks[]) {
 
    if (dataChunks[MESSAGE_POS_START] != START) return true;
    if (dataChunks[MESSAGE_POS_STOP] != STOP) return true;
-   
-   return CalculateCRC(dataChunks) != dataChunks[MESSAGE_POS_LRC] ;
+   bool result = CalculateCRC(dataChunks) != dataChunks[MESSAGE_POS_LRC] ;
+   return result;
 };
 
 
 byte SHCommunication::CalculateCRC(byte chunks[]){
   
   byte result = chunks[0];
-  for (int i = 1; i< MESSAGE_SIZE -1 ; i++) {
+  for (int i = 1; i< (MESSAGE_SIZE -1) ; i++) {
     result = result ^ chunks[i];
   }
-  
-  return result; 
+ return result; 
 };
 
 void  SHCommunication::SendMessage(byte from, byte to,  byte msg) {
@@ -87,7 +89,7 @@ void  SHCommunication::SendMessage(byte from, byte to,  byte msg) {
    message[MESSAGE_POS_FROM] = from;
    message[MESSAGE_POS_TO] = to;
    message[MESSAGE_POS_MESSAGE] = msg;
-   message[MESSAGE_POS_STOP] = from;
+   message[MESSAGE_POS_STOP] = STOP;
    message[MESSAGE_POS_LRC] = CalculateCRC(message);
 
    _rs485Reader.Write(message, MESSAGE_SIZE);
