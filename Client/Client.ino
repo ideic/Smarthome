@@ -15,9 +15,9 @@ void setup() {
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
-  _devices[0] = DeviceFactory::GetDevice(LightSwitchDeviceType, NK1, 4);
-  _devices[1] = DeviceFactory::GetDevice(LightSwitchDeviceType, NK2, 2);
-  _devices[2] = DeviceFactory::GetDevice(LightSwitchDeviceType, NK3, 3);
+  _devices[0] = DeviceFactory::GetDevice(LightSwitchDeviceType, NK1, 2);
+  _devices[1] = DeviceFactory::GetDevice(LightSwitchDeviceType, NK2, 3);
+  _devices[2] = DeviceFactory::GetDevice(LightSwitchDeviceType, NK3, 4);
   
   _devices[3] = DeviceFactory::GetDevice(RelayDeviceType, NL1, 5);
   _devices[4] = DeviceFactory::GetDevice(RelayDeviceType, NL2, 6);
