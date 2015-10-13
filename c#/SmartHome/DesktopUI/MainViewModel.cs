@@ -31,7 +31,7 @@ namespace DesktopUI
             subGraph.AddVertex(new Switch("EK1"));
             subGraph.AddVertex(new Light("LEK1"));
 
-         //   _graph.AddEdge(new MyEdge<Location>(subGraph.Vertices.First(), subGraph.Vertices.Last(), new Arrow()));
+            _graph.AddEdge(new MyEdge<Location>(subGraph.Vertices.First(), subGraph.Vertices.Last(), new Arrow()));
 
             var subGraph2 = new MySubGraph<Location>(){Label = "Gepeszet"};
             _graph.AddSubGraph(subGraph2);
@@ -59,6 +59,10 @@ namespace DesktopUI
 
 
             _graph = deserialized;
+
+            _graph.Edges.Cast<MyEdge<Location>>().First().Source = (Location) _graph.SubGraphs.First().Vertices.First();
+            _graph.Edges.Cast<MyEdge<Location>>().First().Destination = (Location)_graph.SubGraphs.First().Vertices.Last();
+
         }
 
         public class TypeNameSerializationBinder : SerializationBinder
