@@ -15,7 +15,23 @@ namespace DesktopUI
         public MainViewModel()
         {
             _graph = new Graph<Location>();
-            _graph.AddVertex(new Location());
+
+
+            //_graph.AddVertex(new Location("Előszoba"));
+            //_graph.AddVertex(new Location("Gépészet"));
+            var subGraph = new SubGraph<Location>(){Label = "Eloszoba"};
+            _graph.AddSubGraph(subGraph);
+
+            subGraph.AddVertex(new Switch("EK1"));
+            subGraph.AddVertex(new Light("LEK1"));
+
+            _graph.AddEdge(new Edge<Location>(subGraph.Vertices.First(), subGraph.Vertices.Last(), new Arrow()));
+
+            var subGraph2 = new SubGraph<Location>(){Label = "Gepeszet"};
+            _graph.AddSubGraph(subGraph2);
+            subGraph2.AddVertex(new Switch("GK1"));
+
+
         }
 
         public Graph<Location> Graph
@@ -37,24 +53,29 @@ namespace DesktopUI
 
     public class Location
     {
+        public Location(string name)
+        {
+            Name = name;
+        }
+
         public string Name
         {
-            get { return "Test"; } 
+            get; private set;
         }
+    }
 
-        public override string ToString()
+    public class Switch : Location
+    {
+        public Switch(string name) : base(name)
         {
-            return "Location";
         }
     }
 
-    public class Switch
+    public class Light : Location
     {
-    }
-
-    public class Light
-    {
-
+        public Light(string name) : base(name)
+        {
+        }
     }
     public class DiamondArrow
     {
