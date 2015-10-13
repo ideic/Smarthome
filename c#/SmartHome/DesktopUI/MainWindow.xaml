@@ -4,11 +4,12 @@
         xmlns:WPF="clr-namespace:Graphviz4Net.WPF;assembly=Graphviz4Net.WPF" xmlns:DesktopUI="clr-namespace:DesktopUI"
         xmlns:Controls="clr-namespace:WPFExtensions.Controls;assembly=WPFExtensions"
         xmlns:ViewModels="clr-namespace:Graphviz4Net.WPF.ViewModels;assembly=Graphviz4Net.WPF"
+        xmlns:buildBlocks="clr-namespace:DesktopUI.BuildBlocks"
         Title="MainWindow" 
         Height="{Binding WindowHeight, Mode=OneWayToSource}" 
         Width="{Binding WindowWidth, Mode=OneWayToSource}">
     <Window.Resources>
-        <DataTemplate DataType="{x:Type DesktopUI:Location}">
+        <DataTemplate DataType="{x:Type buildBlocks:Location}">
             <Border BorderBrush="Black" BorderThickness="1" Padding="0" CornerRadius="5" Background="White">
                 <Border.Style>
                     <Style>
@@ -67,12 +68,16 @@
     </Window.Resources>
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition>
+            </RowDefinition>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0" Background="#EEEEEE" Margin="0, 0, 0, 15">
+        <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="0" Background="#EEEEEE" Margin="0, 0, 0, 15">
             <StackPanel Margin="50, 10, 10, 10">
                 <TextBlock FontSize="14" Margin="0, 0, 0 , 10">Add a new Location:</TextBlock>
                 <TextBox Text="{Binding NewLocationName}" Width="150" Margin="0, 0, 0, 10"/>
@@ -95,7 +100,8 @@
             <StackPanel Margin="50, 10, 10, 10">
                 <TextBlock FontSize="14" Margin="0, 0, 0 , 10">Assign Switch to Location:</TextBlock>
                 <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
-                    <ComboBox x:Name="NewSwitchAssign" ItemsSource="{Binding LocationNames}" Margin="0, 0, 10, 0" Width="100"/>
+                    <ComboBox x:Name="NewLocationAssign" ItemsSource="{Binding LocationNames}" Margin="0, 0, 10, 0" Width="100"/>
+                    <ComboBox x:Name="NewSwitchAssign" ItemsSource="{Binding SwitchNames}" Margin="0, 0, 10, 0" Width="100"/>
                 </StackPanel>
                 <Button x:Name="AssignNewSwitch">Assign Switch</Button>
             </StackPanel>
@@ -103,13 +109,20 @@
             <StackPanel Margin="50, 10, 10, 10">
                 <TextBlock FontSize="14" Margin="0, 0, 0 , 10">Assign Light to Switch:</TextBlock>
                 <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
-                    <ComboBox x:Name="NewLightAssign" ItemsSource="{Binding SwitchNames}" Margin="0, 0, 10, 0" Width="100"/>
+                    <ComboBox x:Name="SwitchToLightAssign" ItemsSource="{Binding SwitchNames}" Margin="0, 0, 10, 0" Width="100"/>
+                    <ComboBox x:Name="LightAssign" ItemsSource="{Binding LightNames}" Margin="0, 0, 10, 0" Width="100"/>
                 </StackPanel>
                 <Button x:Name="AssignNewLight">Assign Light</Button>
             </StackPanel>
+
+            <StackPanel Margin="50, 10, 10, 10">
+                <TextBlock FontSize="14" Margin="0, 0, 0 , 10">GenerateFiles</TextBlock>
+                <Button x:Name="Generate">Generate</Button>
+            </StackPanel>
+
         </StackPanel>
 
-        <Controls:ZoomControl Grid.Column="0" Grid.Row="1">
+        <Controls:ZoomControl Grid.Column="1" Grid.Row="0">
 
             <WPF:GraphLayout 
                 UseContentPresenterForAllElements="True"

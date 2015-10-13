@@ -1,79 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
-using Graphviz4Net.Dot;
-using Graphviz4Net.Dot.AntlrParser;
+using DesktopUI.Annotations;
+using DesktopUI.BuildBlocks;
+using DesktopUI.Graph;
 using Graphviz4Net.Graphs;
 using Newtonsoft.Json;
 
 namespace DesktopUI
 {
-    public class MainViewModel
+    public class MainViewModel : INotifyPropertyChanged
     {
 
-        private MyGraph<Location> _graph;
+        private readonly MyGraph<Location> _graph;
 
         public MainViewModel()
         {
             _graph = new MyGraph<Location>();
+            _graph.Changed += GraphChanged;
 
-
-            //_graph.AddVertex(new Location("Előszoba"));
+            /*      //_graph.AddVertex(new Location("Előszoba"));
             //_graph.AddVertex(new Location("Gépészet"));
             var subGraph = new MySubGraph<Location>(){Label = "Eloszoba"};
             _graph.AddSubGraph(subGraph);
 
-            subGraph.AddVertex(new Switch("EK1"));
-            subGraph.AddVertex(new Light("LEK1"));
+            subGraph.AddVertex(new Switch("EK1", "EK1"));
+            subGraph.AddVertex(new Light("LEK1", "LEK1"));
 
             _graph.AddEdge(new MyEdge<Location>(subGraph.Vertices.First(), subGraph.Vertices.Last(), new Arrow()));
 
             var subGraph2 = new MySubGraph<Location>(){Label = "Gepeszet"};
             _graph.AddSubGraph(subGraph2);
-            subGraph2.AddVertex(new Switch("GK1"));
+            subGraph2.AddVertex(new Switch("GK1", "GK1"));
+            */
+        }
 
+        private void GraphChanged(object sender, GraphChangedArgs e)
 
-            var binder = new TypeNameSerializationBinder("DesktopUI");
-      
-            var resString = JsonConvert.SerializeObject(_graph, Formatting.Indented, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.Auto,
-                Binder = binder
-            });
-
-            
-            
-            //_graph = new MyGraph<Location>();
-
-
-            var deserialized = JsonConvert.DeserializeObject<MyGraph<Location>>(resString, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.Auto,
-                Binder = binder
-            });
-
-
-            _graph = deserialized;
-
-            _graph.Edges.Cast<MyEdge<Location>>().First().Source = (Location) _graph.SubGraphs.First().Vertices.First();
-            _graph.Edges.Cast<MyEdge<Location>>().First().Destination = (Location)_graph.SubGraphs.First().Vertices.Last();
+        {
+            OnPropertyChanged("Graph");
 
         }
 
+
         public class TypeNameSerializationBinder : SerializationBinder
         {
-            public string TypeFormat { get; private set; }
-
-            public TypeNameSerializationBinder(string typeFormat)
-            {
-                TypeFormat = typeFormat;
-            }
-
             public override void BindToName(Type serializedType, out string assemblyName, out string typeName)
             {
                 assemblyName = null;
@@ -96,143 +70,121 @@ namespace DesktopUI
 
         public string NewSwitchName { get; set; }
 
-        public string NewLightnName { get; set; }
+        public string NewLightName { get; set; }
+
+        public string NewLocationAssign { get; set; }
+
+        public string NewSwitchAssign { get; set; }
+
+        public string SwitchToLightAssign { get; set; }
+
+        public string LightAssign { get; set; }
+    
 
         public IEnumerable<string> LocationNames
         {
-            get { return Graph.Vertices.Select(x => ((Location)x).Name); }
+            get { return _graph.SubGraphs.Select(subGraph => subGraph.Label); }
         }
-    }
 
-    public class MyGraph<T> : IGraph
-    {
-        private ICollection<MySubGraph<T>> _subGraphs;
-        private ICollection<MyEdge<T>> _edges;
-        private ICollection<T> _vertices;
-
-        public MyGraph()
+        public IEnumerable<string> SwitchNames
         {
-            _edges = new List<MyEdge<T>>();
-            _vertices = new List<T>();
-            _subGraphs = new List<MySubGraph<T>>();
-
-        }
-        public IEnumerable<IEdge> Edges {
-            get { return _edges; }
-        }
-
-        public IEnumerable<object> Vertices {
-            get { return _vertices.Cast<object>(); }
+            get
+            {
+                var result = new List<string>();
+                foreach (var subgraph in _graph.SubGraphs)
+                {
+                    result.AddRange(subgraph.Vertices.OfType<Switch>().Select(vertex => vertex.Name));
+                }
+                return result;
+            }
         }
 
-        public IEnumerable<ISubGraph> SubGraphs {
-            get { return _subGraphs; }
-        }
-
-        public event EventHandler<GraphChangedArgs> Changed;
-
-        public void AddSubGraph(MySubGraph<T> subGraph)
+        public IEnumerable<string> LightNames
         {
-            _subGraphs.Add(subGraph);
+            get 
+            {
+                var result = new List<string>();
+                foreach (var subgraph in _graph.SubGraphs)
+                {
+                    result.AddRange(subgraph.Vertices.OfType<Light>().Select(vertex => vertex.Name));
+                }
+                return result;
+            }
         }
-
-        public void AddEdge(MyEdge<T> edge)
+        public void CreateNewLocation()
         {
-            _edges.Add(edge);
-        }
-    }
+            var subGraph = new MySubGraph<Location>{Label = NewLocationName};
+            subGraph.AddVertex(new Location("?", Generated.True));
 
-    public class MyEdge<T> : IEdge<T>
-    {
-        public MyEdge(T source, T destination, Arrow arrow)
+            _graph.AddSubGraph(subGraph);
+        }
+
+        public void CreateNewSwitch()
         {
-            Source = source;
-            Destination = destination;
-            DestinationArrow = arrow;
+            _graph.AddVertex(new Switch(NewSwitchName, Generated.False));
         }
 
-        object IEdge.Source
+        public void CreateNewLight()
         {
-            get { return Source; }
+            _graph.AddVertex(new Light(NewLightName, Generated.False));
         }
 
-        public T Destination { get; set; }
-
-        public T Source { get; set; }
-
-        object IEdge.Destination
+        public void AssignSwitchToLocation()
         {
-            get { return Destination; }
+            var locationSubGraph = _graph.SubGraphs.First(graph => graph.Label == NewLocationAssign);
+            locationSubGraph.AddVertex(new Switch(NewSwitchAssign, Generated.False));
+            var switchVertex = _graph.Vertices.First(vertex => vertex.Name == NewSwitchAssign);
+            _graph.RemoveVertex(switchVertex);
         }
 
-        public object DestinationPort
+        public void AssignLightToSwitch()
         {
-             get; set; 
+            var locationSubGraph = _graph.SubGraphs.First(graph => graph.Vertices.Any(vertex => vertex.Name == SwitchToLightAssign));
+            locationSubGraph.AddVertex(new Light(LightAssign, Generated.False));
+            var switchVertex = _graph.Vertices.First(vertex => vertex.Name == LightAssign);
+            _graph.RemoveVertex(switchVertex);
+            
         }
 
-        public object DestinationArrow { get; private set; }
-
-        public object SourceArrow { get; set; }
-
-        public object SourcePort { get; set; }
-    }
-
-    public class MySubGraph<T> : ISubGraph<T>
-    {
-        private ICollection<T> _vertices;
-        public MySubGraph()
+        public void GenerateArduinos(string filename)
         {
-            _vertices = new List<T>();
-        }
-        
-        public IEnumerable<T> Vertices {
-            get {  return _vertices; }
+            var binder = new TypeNameSerializationBinder();
+
+            var resString = JsonConvert.SerializeObject(_graph, Formatting.Indented, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                Binder = binder
+            });
+
+
+
+            //_graph = new MyGraph<Location>();
+
+
+            var deserialized = JsonConvert.DeserializeObject<MyGraph<Location>>(resString, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                Binder = binder
+            });
+
+
+            //_graph = deserialized;
+
+            _graph.Edges.Cast<MyEdge<Location>>().First().Source = (Location)_graph.SubGraphs.First().Vertices.First();
+            _graph.Edges.Cast<MyEdge<Location>>().First().Destination = (Location)_graph.SubGraphs.First().Vertices.Last();            
         }
 
-        IEnumerable<object> ISubGraph.Vertices
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            get { return _vertices.Cast<object>(); }
-        }
-
-        public string Label { get; set; }
-
-        public event EventHandler<GraphChangedArgs> Changed;
-
-        public void AddVertex(T vertex)
-        {
-            _vertices.Add(vertex);
+            var handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
 
-
-
-    public class Location
-    {
-        public Location(string name)
-        {
-            Name = name;
-        }
-
-        public string Name
-        {
-            get; private set;
-        }
-    }
-
-    public class Switch : Location
-    {
-        public Switch(string name) : base(name)
-        {
-        }
-    }
-
-    public class Light : Location
-    {
-        public Light(string name) : base(name)
-        {
-        }
-    }
     public class DiamondArrow
     {
     }

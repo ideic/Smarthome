@@ -34,31 +34,38 @@ namespace DesktopUI
 
             AssignNewSwitch.Click += AssignNewSwitchClick;
             AssignNewLight.Click += AssignNewLightClick;
+            Generate.Click += GenerateOnClick;
 
         }
+
+        private void GenerateOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            _mainViewModel.GenerateArduinos("filename");
+        }
+
         private void AddNewLocationClick(object sender, RoutedEventArgs e)
         {
-            //_mainViewModel.CreateNewLocation();
+            _mainViewModel.CreateNewLocation();
         }
 
         private void AddNewSwitchClick(object sender, RoutedEventArgs e)
         {
-            //_mainViewModel.CreateNewLocation();
+            _mainViewModel.CreateNewSwitch();
         }
 
         private void AddNewLightClick(object sender, RoutedEventArgs e)
         {
-            //_mainViewModel.CreateNewLocation();
+            _mainViewModel.CreateNewLight();
         }
 
         private void AssignNewSwitchClick(object sender, RoutedEventArgs e)
         {
-            //_mainViewModel.CreateNewLocation();
+            _mainViewModel.AssignSwitchToLocation();
         }
 
         private void AssignNewLightClick(object sender, RoutedEventArgs e)
         {
-            //_mainViewModel.CreateNewLocation();
+            _mainViewModel.AssignLightToSwitch();
         }
 
     }
