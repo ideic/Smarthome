@@ -118,6 +118,8 @@ namespace DesktopUI
         }
         public void CreateNewLocation()
         {
+            if (_graph.SubGraphs.Any(subgraph => subgraph.Label == NewLocationName)) return;
+
             var subGraph = new MySubGraph<Location>{Label = NewLocationName};
             subGraph.AddVertex(new Location("?", Generated.True));
 
@@ -128,12 +130,16 @@ namespace DesktopUI
 
         public void CreateNewSwitch()
         {
+            if (_graph.Vertices.Any(vertex => vertex.Name == NewSwitchName)) return;
+
             _graph.AddVertex(new Switch(NewSwitchName, Generated.False));
             OnPropertyChanged("SwitchNames");
         }
 
         public void CreateNewLight()
         {
+            if (_graph.Vertices.Any(vertex => vertex.Name == NewLightName)) return;
+
             _graph.AddVertex(new Light(NewLightName, Generated.False));
             OnPropertyChanged("LightNames");
         }
@@ -141,6 +147,9 @@ namespace DesktopUI
         public void AssignSwitchToLocation()
         {
             var locationSubGraph = _graph.SubGraphs.First(graph => graph.Label == AssignSwitchToLocationLocation);
+
+            if (locationSubGraph.Vertices.Any(vertex => vertex.Name == AssignSwitchToLocationSwitch)) return;
+
             locationSubGraph.AddVertex(new Switch(AssignSwitchToLocationSwitch, Generated.False));
             var switchVertex = _graph.Vertices.First(vertex => vertex.Name == AssignSwitchToLocationSwitch);
 
@@ -162,6 +171,9 @@ namespace DesktopUI
         public void AssignLightToLocation()
         {
             var locationSubGraph = _graph.SubGraphs.First(graph => graph.Label == AssignLight2LocationLocation);
+
+            if (locationSubGraph.Vertices.Any(vertex => vertex.Name == AssignLight2LocationLight)) return;
+            
             var light = new Light(AssignLight2LocationLight, Generated.False);
             locationSubGraph.AddVertex(light);
             var switchVertex = _graph.Vertices.First(vertex => vertex.Name == AssignLight2LocationLight);
@@ -182,8 +194,10 @@ namespace DesktopUI
 
             var lightTo = lightes.First(item => item.Name == AssignSwitchToLightLight);
 
+            //edge already exists
+            if (_graph.Edges.Any(edge => ((Location)edge.Source).Name == AssignSwitchToLightSwitch && ((Location)edge.Destination).Name == AssignSwitchToLightLight)) return;
+
             _graph.AddEdge(new MyEdge<Location>(switchFrom, lightTo, new Arrow()));
-            
         }
 
         public void GenerateArduinos(string filename)
