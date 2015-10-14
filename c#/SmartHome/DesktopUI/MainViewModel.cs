@@ -72,14 +72,16 @@ namespace DesktopUI
 
         public string NewLightName { get; set; }
 
-        public string NewLocationAssign { get; set; }
+        public string AssignSwitchToLocationLocation { get; set; }
 
-        public string NewSwitchAssign { get; set; }
+        public string AssignSwitchToLocationSwitch { get; set; }
 
-        public string SwitchToLightAssign { get; set; }
+        public string AssignSwitchToLightSwitch { get; set; }
 
-        public string LightAssign { get; set; }
-    
+        public string AssignSwitchToLightLight { get; set; }
+
+        public string AssignLight2LocationLocation { get; set; }
+        public string AssignLight2LocationLight { get; set; }
 
         public IEnumerable<string> LocationNames
         {
@@ -95,6 +97,8 @@ namespace DesktopUI
                 {
                     result.AddRange(subgraph.Vertices.OfType<Switch>().Select(vertex => vertex.Name));
                 }
+
+                result.AddRange(_graph.Vertices.OfType<Switch>().Select(vertex => vertex.Name));
                 return result;
             }
         }
@@ -108,6 +112,7 @@ namespace DesktopUI
                 {
                     result.AddRange(subgraph.Vertices.OfType<Light>().Select(vertex => vertex.Name));
                 }
+                result.AddRange(_graph.Vertices.OfType<Light>().Select(vertex => vertex.Name));
                 return result;
             }
         }
@@ -117,32 +122,67 @@ namespace DesktopUI
             subGraph.AddVertex(new Location("?", Generated.True));
 
             _graph.AddSubGraph(subGraph);
+
+            OnPropertyChanged("LocationNames");
         }
 
         public void CreateNewSwitch()
         {
             _graph.AddVertex(new Switch(NewSwitchName, Generated.False));
+            OnPropertyChanged("SwitchNames");
         }
 
         public void CreateNewLight()
         {
             _graph.AddVertex(new Light(NewLightName, Generated.False));
+            OnPropertyChanged("LightNames");
         }
 
         public void AssignSwitchToLocation()
         {
-            var locationSubGraph = _graph.SubGraphs.First(graph => graph.Label == NewLocationAssign);
-            locationSubGraph.AddVertex(new Switch(NewSwitchAssign, Generated.False));
-            var switchVertex = _graph.Vertices.First(vertex => vertex.Name == NewSwitchAssign);
+            var locationSubGraph = _graph.SubGraphs.First(graph => graph.Label == AssignSwitchToLocationLocation);
+            locationSubGraph.AddVertex(new Switch(AssignSwitchToLocationSwitch, Generated.False));
+            var switchVertex = _graph.Vertices.First(vertex => vertex.Name == AssignSwitchToLocationSwitch);
+
+            PurifyLocation(locationSubGraph);
+
             _graph.RemoveVertex(switchVertex);
         }
 
-        public void AssignLightToSwitch()
+        private static void PurifyLocation(MySubGraph<Location> locationSubGraph)
         {
-            var locationSubGraph = _graph.SubGraphs.First(graph => graph.Vertices.Any(vertex => vertex.Name == SwitchToLightAssign));
-            locationSubGraph.AddVertex(new Light(LightAssign, Generated.False));
-            var switchVertex = _graph.Vertices.First(vertex => vertex.Name == LightAssign);
+            var initItem = locationSubGraph.Vertices.FirstOrDefault(location => location.Generated == Generated.True);
+
+            if (initItem != null)
+            {
+                locationSubGraph.RemoveVertex(initItem);
+            }
+        }
+
+        public void AssignLightToLocation()
+        {
+            var locationSubGraph = _graph.SubGraphs.First(graph => graph.Label == AssignLight2LocationLocation);
+            var light = new Light(AssignLight2LocationLight, Generated.False);
+            locationSubGraph.AddVertex(light);
+            var switchVertex = _graph.Vertices.First(vertex => vertex.Name == AssignLight2LocationLight);
+            
+            PurifyLocation(locationSubGraph);
+
             _graph.RemoveVertex(switchVertex);
+        }
+
+        public void AssignSwitchToLight()
+        {
+            var switches = _graph.SubGraphs.SelectMany(subGraph => subGraph.Vertices.OfType<Switch>()).ToList();
+            
+            var switchFrom = switches.First(item => item.Name == AssignSwitchToLightSwitch);
+
+
+            var lightes = _graph.SubGraphs.SelectMany(subGraph => subGraph.Vertices.OfType<Light>()).ToList();
+
+            var lightTo = lightes.First(item => item.Name == AssignSwitchToLightLight);
+
+            _graph.AddEdge(new MyEdge<Location>(switchFrom, lightTo, new Arrow()));
             
         }
 

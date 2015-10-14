@@ -30,5 +30,10 @@ namespace DesktopUI.Graph
         {
             _vertices.Add(vertex);
         }
+
+        public void RemoveVertex(T initItem)
+        {
+            _vertices.Remove(initItem);
+        }
     }
 }

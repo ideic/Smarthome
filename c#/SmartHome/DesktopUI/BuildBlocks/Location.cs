@@ -11,7 +11,7 @@ namespace DesktopUI.BuildBlocks
             Generated = generated;
         }
 
-        protected Generated Generated { get; private set; }
+        public Generated Generated { get; private set; }
 
         protected Guid Id { get; private set; }
 

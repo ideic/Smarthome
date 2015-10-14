@@ -20,7 +20,7 @@ namespace DesktopUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private MainViewModel _mainViewModel;
+        private readonly MainViewModel _mainViewModel;
 
         public MainWindow()
         {
@@ -32,8 +32,11 @@ namespace DesktopUI
             AddNewSwitch.Click += AddNewSwitchClick;
             AddNewLight.Click += AddNewLightClick;
 
-            AssignNewSwitch.Click += AssignNewSwitchClick;
-            AssignNewLight.Click += AssignNewLightClick;
+            AssignSwitchToLocation.Click += AssignSwitchToLocationClick;
+            AssignSwitchToLight.Click += AssignSwitchToLightClick;
+
+            AssignLightToLocation.Click += AssignLightToLocationClick;
+
             Generate.Click += GenerateOnClick;
 
         }
@@ -58,14 +61,29 @@ namespace DesktopUI
             _mainViewModel.CreateNewLight();
         }
 
-        private void AssignNewSwitchClick(object sender, RoutedEventArgs e)
+          private void AssignLightToLocationClick(object sender, RoutedEventArgs e)
         {
+            _mainViewModel.AssignLight2LocationLight = (string)AssignLight2LocationLight.SelectedItem;
+            _mainViewModel.AssignLight2LocationLocation = (string)AssignLight2LocationLocation.SelectedItem;
+            _mainViewModel.AssignLightToLocation();
+        }
+
+
+        
+        private void AssignSwitchToLocationClick(object sender, RoutedEventArgs e)
+        {
+            _mainViewModel.AssignSwitchToLocationLocation = (string)AssignSwitchToLocationLocation.SelectedItem;
+            _mainViewModel.AssignSwitchToLocationSwitch = (string)AssignSwitchToLocationSwitch.SelectedItem;
+
             _mainViewModel.AssignSwitchToLocation();
         }
 
-        private void AssignNewLightClick(object sender, RoutedEventArgs e)
+        private void AssignSwitchToLightClick(object sender, RoutedEventArgs e)
         {
-            _mainViewModel.AssignLightToSwitch();
+            _mainViewModel.AssignSwitchToLightLight = (string)AssignSwitchToLightLight.SelectedItem;
+            _mainViewModel.AssignSwitchToLightSwitch = (string)AssignSwitchToLightSwitch.SelectedItem;
+
+            _mainViewModel.AssignSwitchToLight();
         }
 
     }
