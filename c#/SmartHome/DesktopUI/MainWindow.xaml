@@ -81,19 +81,28 @@
             <StackPanel Margin="50, 10, 10, 10">
                 <TextBlock FontSize="14" Margin="0, 0, 0 , 10">Add a new Location:</TextBlock>
                 <TextBox Text="{Binding NewLocationName}" Width="150" Margin="0, 0, 0, 10"/>
-                <Button x:Name="AddNewLocation">Add new location</Button>
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                    <Button x:Name="AddNewLocation" Margin="0, 0, 10, 0" Width="100">Add new location</Button>
+                    <Button x:Name="DeleteLocation" Margin="0, 0, 10, 0" Width="100">Delete location</Button>
+                </StackPanel>
             </StackPanel>
 
             <StackPanel Margin="50, 10, 10, 10">
                 <TextBlock FontSize="14" Margin="0, 0, 0 , 10">Add a new Switch:</TextBlock>
                 <TextBox Text="{Binding NewSwitchName}" Width="150" Margin="0, 0, 0, 10"/>
-                <Button x:Name="AddNewSwitch">Add new switch</Button>
-            </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                    <Button x:Name="AddNewSwitch" Margin="0, 0, 10, 0" Width="100">Add new switch</Button>
+                    <Button x:Name="DeleteSwitch" Margin="0, 0, 10, 0" Width="100">Delete switch</Button>
+                </StackPanel>
+             </StackPanel>
 
             <StackPanel Margin="50, 10, 10, 10">
                 <TextBlock FontSize="14" Margin="0, 0, 0 , 10">Add a new Light:</TextBlock>
                 <TextBox Text="{Binding NewLightName}" Width="150" Margin="0, 0, 0, 10"/>
-                <Button x:Name="AddNewLight">Add new light</Button>
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                    <Button x:Name="AddNewLight" Margin="0, 0, 10, 0" Width="100">Add new light</Button>
+                    <Button x:Name="DeleteLight" Margin="0, 0, 10, 0" Width="100">Delete light</Button>
+                </StackPanel>
             </StackPanel>
 
 

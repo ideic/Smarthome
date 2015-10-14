@@ -7,7 +7,6 @@ using System.Runtime.Serialization;
 using DesktopUI.Annotations;
 using DesktopUI.BuildBlocks;
 using DesktopUI.Graph;
-using Graphviz4Net.Graphs;
 using Newtonsoft.Json;
 
 namespace DesktopUI
@@ -20,7 +19,6 @@ namespace DesktopUI
         public MainViewModel()
         {
             _graph = new MyGraph<Location>();
-            _graph.Changed += GraphChanged;
 
             /*      //_graph.AddVertex(new Location("Előszoba"));
             //_graph.AddVertex(new Location("Gépészet"));
@@ -37,14 +35,6 @@ namespace DesktopUI
             subGraph2.AddVertex(new Switch("GK1", "GK1"));
             */
         }
-
-        private void GraphChanged(object sender, GraphChangedArgs e)
-
-        {
-            OnPropertyChanged("Graph");
-
-        }
-
 
         public class TypeNameSerializationBinder : SerializationBinder
         {
@@ -93,14 +83,22 @@ namespace DesktopUI
             get
             {
                 var result = new List<string>();
-                foreach (var subgraph in _graph.SubGraphs)
-                {
-                    result.AddRange(subgraph.Vertices.OfType<Switch>().Select(vertex => vertex.Name));
-                }
-
-                result.AddRange(_graph.Vertices.OfType<Switch>().Select(vertex => vertex.Name));
+                
+                result.AddRange(GetBuildBlocks<Switch>().Select(vertex => vertex.Name));
                 return result;
             }
+        }
+
+        public IEnumerable<T> GetBuildBlocks<T>() where T : Location
+        {
+            var result = new List<T>();
+            foreach (var subgraph in _graph.SubGraphs)
+            {
+                result.AddRange(subgraph.Vertices.OfType<T>());
+            }
+
+            result.AddRange(_graph.Vertices.OfType<T>());
+            return result;
         }
 
         public IEnumerable<string> LightNames
@@ -108,14 +106,13 @@ namespace DesktopUI
             get 
             {
                 var result = new List<string>();
-                foreach (var subgraph in _graph.SubGraphs)
-                {
-                    result.AddRange(subgraph.Vertices.OfType<Light>().Select(vertex => vertex.Name));
-                }
-                result.AddRange(_graph.Vertices.OfType<Light>().Select(vertex => vertex.Name));
+
+                result.AddRange(GetBuildBlocks<Light>().Select(light => light.Name));
                 return result;
             }
         }
+
+
         public void CreateNewLocation()
         {
             if (_graph.SubGraphs.Any(subgraph => subgraph.Label == NewLocationName)) return;
@@ -126,7 +123,29 @@ namespace DesktopUI
             _graph.AddSubGraph(subGraph);
 
             OnPropertyChanged("LocationNames");
+ 
         }
+
+        public void DeleteLocation()
+        {
+            var location= _graph.SubGraphs.FirstOrDefault(subgraph => subgraph.Label == NewLocationName);
+
+            if (location == null) return;
+            
+            foreach (var edge in location.Vertices.Select(vertex1 => _graph.Edges.Cast<MyEdge<Location>>().Where(
+                edge => edge.Source.Name == vertex1.Name || edge.Destination.Name == vertex1.Name).ToList()).SelectMany(edges => edges))
+            {
+                _graph.RemoveEdge(edge);
+            }
+
+            while (location.Vertices.Any())
+            {
+                location.RemoveVertex(location.Vertices.First());
+            }
+
+            _graph.RemoveSubGraph(location);
+        }
+ 
 
         public void CreateNewSwitch()
         {
@@ -136,6 +155,11 @@ namespace DesktopUI
             OnPropertyChanged("SwitchNames");
         }
 
+        public void DeleteSwitch()
+        {
+            DeleteBuildBlock<Switch>(NewSwitchName);
+        }
+
         public void CreateNewLight()
         {
             if (_graph.Vertices.Any(vertex => vertex.Name == NewLightName)) return;
@@ -143,6 +167,44 @@ namespace DesktopUI
             _graph.AddVertex(new Light(NewLightName, Generated.False));
             OnPropertyChanged("LightNames");
         }
+
+        public void DeleteLight()
+        {
+            DeleteBuildBlock<Light>(NewLightName);
+        }
+
+        private void DeleteBuildBlock<T>(string buildBlockName) where T: Location
+        {
+            var location = GetBuildBlocks<T>().FirstOrDefault(light => light.Name == buildBlockName);
+
+            if (location == null) return;
+
+            var edges = _graph.Edges.Cast<MyEdge<Location>>()
+                              .Where(edge => edge.Source.Name == location.Name
+                                             || edge.Destination.Name == location.Name).ToList();
+
+            foreach (var edge in edges)
+            {
+                _graph.RemoveEdge(edge);
+            }
+
+
+            var subGraph =
+                _graph.SubGraphs.FirstOrDefault(subgraph => subgraph.Vertices.Any(vertex => vertex.Name == location.Name));
+
+            if (subGraph != null)
+            {
+                subGraph.RemoveVertex(location);
+            }
+
+            if (_graph.Vertices.Any(vertex => vertex.Name == location.Name))
+            {
+                _graph.RemoveVertex(location);
+            }
+
+            _graph.Refresh();
+        }
+
 
         public void AssignSwitchToLocation()
         {
@@ -236,6 +298,7 @@ namespace DesktopUI
             var handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
+
     }
 
 

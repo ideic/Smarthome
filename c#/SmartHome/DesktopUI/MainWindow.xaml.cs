@@ -29,8 +29,12 @@ namespace DesktopUI
 
             InitializeComponent();
             AddNewLocation.Click += AddNewLocationClick;
+            DeleteLocation.Click += DeleteLocationOnClick;
+            
             AddNewSwitch.Click += AddNewSwitchClick;
+            DeleteSwitch.Click += DeleteSwitchOnClick;
             AddNewLight.Click += AddNewLightClick;
+            DeleteLight.Click += DeleteLightOnClick;
 
             AssignSwitchToLocation.Click += AssignSwitchToLocationClick;
             AssignSwitchToLight.Click += AssignSwitchToLightClick;
@@ -41,6 +45,17 @@ namespace DesktopUI
 
         }
 
+        private void DeleteSwitchOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            _mainViewModel.DeleteSwitch();
+        }
+
+        private void DeleteLightOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            _mainViewModel.DeleteLight();
+        }
+
+
         private void GenerateOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
             _mainViewModel.GenerateArduinos("filename");
@@ -50,6 +65,12 @@ namespace DesktopUI
         {
             _mainViewModel.CreateNewLocation();
         }
+
+        private void DeleteLocationOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            _mainViewModel.DeleteLocation();
+        }
+
 
         private void AddNewSwitchClick(object sender, RoutedEventArgs e)
         {

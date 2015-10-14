@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DesktopUI.BuildBlocks;
 using Graphviz4Net.Graphs;
 
 namespace DesktopUI.Graph
@@ -65,6 +64,22 @@ namespace DesktopUI.Graph
         public void RemoveVertex(T vertex)
         {
             _vertices.Remove(vertex);
+            Changed.SafeInvoke(this);
+        }
+
+        public void RemoveSubGraph(MySubGraph<T> subGraph)
+        {
+            _subGraphs.Remove(subGraph);
+            Changed.SafeInvoke(this);
+        }
+
+        public void RemoveEdge(MyEdge<T> edge)
+        {
+            _edges.Remove(edge);
+        }
+
+        public void Refresh()
+        {
             Changed.SafeInvoke(this);
         }
     }
