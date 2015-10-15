@@ -112,7 +112,10 @@
                     <ComboBox x:Name="AssignSwitchToLocationLocation" ItemsSource="{Binding LocationNames}" Margin="0, 0, 10, 0" Width="100"/>
                     <ComboBox x:Name="AssignSwitchToLocationSwitch" ItemsSource="{Binding SwitchNames}" Margin="0, 0, 10, 0" Width="100"/>
                 </StackPanel>
-                <Button x:Name="AssignSwitchToLocation">Assign Switch</Button>
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                    <Button x:Name="AssignSwitchToLocation" Margin="0, 0, 10, 0">Assign Switch</Button>
+                    <Button x:Name="RemoveSwitchFromLocation" Margin="0, 0, 10, 0">Remove Switch</Button>
+                </StackPanel>
             </StackPanel>
 
             <StackPanel Margin="50, 10, 10, 10">
@@ -121,16 +124,21 @@
                     <ComboBox x:Name="AssignLight2LocationLocation" ItemsSource="{Binding LocationNames}" Margin="0, 0, 10, 0" Width="100"/>
                     <ComboBox x:Name="AssignLight2LocationLight" ItemsSource="{Binding LightNames}" Margin="0, 0, 10, 0" Width="100"/>
                 </StackPanel>
-                <Button x:Name="AssignLightToLocation">Assign Light</Button>
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                    <Button x:Name="AssignLightToLocation" Margin="0, 0, 10, 0">Assign Light</Button>
+                    <Button x:Name="RemoveLightFromLocation" Margin="0, 0, 10, 0">Remove Light</Button>
+                </StackPanel>
             </StackPanel>
-
             <StackPanel Margin="50, 10, 10, 10">
                 <TextBlock FontSize="14" Margin="0, 0, 0 , 10">Assign Switch to Light:</TextBlock>
                 <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
                     <ComboBox x:Name="AssignSwitchToLightSwitch" ItemsSource="{Binding SwitchNames}" Margin="0, 0, 10, 0" Width="100"/>
                     <ComboBox x:Name="AssignSwitchToLightLight" ItemsSource="{Binding LightNames}" Margin="0, 0, 10, 0" Width="100"/>
                 </StackPanel>
-                <Button x:Name="AssignSwitchToLight">Assign Switch</Button>
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                    <Button x:Name="AssignSwitchToLight" Margin="0, 0, 10, 0">Assign Switch To Light</Button>
+                    <Button x:Name="RemoveSwitchFromLight" Margin="0, 0, 10, 0">Remove Switch From Light</Button>
+                </StackPanel>
             </StackPanel>
 
             <StackPanel Margin="50, 10, 10, 10">

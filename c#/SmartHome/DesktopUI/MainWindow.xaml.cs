@@ -37,12 +37,31 @@ namespace DesktopUI
             DeleteLight.Click += DeleteLightOnClick;
 
             AssignSwitchToLocation.Click += AssignSwitchToLocationClick;
+            RemoveSwitchFromLocation.Click += RemoveSwitchFromLocationOnClick;
+
             AssignSwitchToLight.Click += AssignSwitchToLightClick;
+            RemoveLightFromLocation.Click += RemoveLightFromLocationOnClick;
 
             AssignLightToLocation.Click += AssignLightToLocationClick;
+            RemoveSwitchFromLight.Click += RemoveSwitchFromLightOnClick;
 
             Generate.Click += GenerateOnClick;
 
+        }
+
+        private void RemoveSwitchFromLightOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            _mainViewModel.RemoveSwitchFromLight();
+        }
+
+        private void RemoveLightFromLocationOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            _mainViewModel.RemoveLightFromLocation();
+        }
+
+        private void RemoveSwitchFromLocationOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            _mainViewModel.RemoveSwitchFromLocation();
         }
 
         private void DeleteSwitchOnClick(object sender, RoutedEventArgs routedEventArgs)

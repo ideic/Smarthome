@@ -76,6 +76,7 @@ namespace DesktopUI.Graph
         public void RemoveEdge(MyEdge<T> edge)
         {
             _edges.Remove(edge);
+            Changed.SafeInvoke(this);
         }
 
         public void Refresh()

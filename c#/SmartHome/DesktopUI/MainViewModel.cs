@@ -220,6 +220,43 @@ namespace DesktopUI
             _graph.RemoveVertex(switchVertex);
         }
 
+        public void RemoveSwitchFromLocation()
+        {
+            RemoveBuildBlockFromLocation(new Switch(AssignSwitchToLocationSwitch, Generated.False), AssignSwitchToLocationLocation, AssignSwitchToLocationSwitch);
+        }
+
+        public void RemoveLightFromLocation()
+        {
+            RemoveBuildBlockFromLocation(new Switch(AssignLight2LocationLight, Generated.False), AssignLight2LocationLocation, AssignLight2LocationLight);
+        }
+
+        public void RemoveBuildBlockFromLocation(Location buildBlock, string locationName, string buildblockName)
+        {
+            var locationSubGraph = _graph.SubGraphs.FirstOrDefault(graph => graph.Label == locationName);
+
+            if (locationSubGraph == null) return;
+
+            var switchT = locationSubGraph.Vertices.FirstOrDefault(vertex => vertex.Name == buildblockName);
+
+            if (switchT == null) return;
+
+            var edges =
+                _graph.Edges.OfType<MyEdge<Location>>()
+                      .Where(edge => edge.Source.Name == buildblockName || edge.Destination.Name == buildblockName)
+                      .ToList();
+
+            foreach (var edge in edges)
+            {
+                _graph.RemoveEdge(edge);
+            }
+
+
+            locationSubGraph.RemoveVertex(switchT);
+
+            _graph.AddVertex(buildBlock);
+
+        }
+
         private static void PurifyLocation(MySubGraph<Location> locationSubGraph)
         {
             var initItem = locationSubGraph.Vertices.FirstOrDefault(location => location.Generated == Generated.True);
@@ -262,6 +299,18 @@ namespace DesktopUI
             _graph.AddEdge(new MyEdge<Location>(switchFrom, lightTo, new Arrow()));
         }
 
+        public void RemoveSwitchFromLight()
+        {
+            //edge already exists
+            var edgeToDelete = _graph.Edges.OfType<MyEdge<Location>>().FirstOrDefault(edge => edge.Source.Name == AssignSwitchToLightSwitch && edge.Destination.Name == AssignSwitchToLightLight);
+
+            if (edgeToDelete == null) return;
+
+            _graph.RemoveEdge(edgeToDelete);
+
+        }
+
+
         public void GenerateArduinos(string filename)
         {
             var binder = new TypeNameSerializationBinder();
@@ -298,6 +347,7 @@ namespace DesktopUI
             var handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
+
 
     }
 
