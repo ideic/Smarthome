@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using DesktopUI.Annotations;
 using DesktopUI.BuildBlocks;
 using DesktopUI.Graph;
-using Newtonsoft.Json;
 
 namespace DesktopUI
 {
@@ -35,21 +32,6 @@ namespace DesktopUI
             subGraph2.AddVertex(new Switch("GK1", "GK1"));
             */
         }
-
-        public class TypeNameSerializationBinder : SerializationBinder
-        {
-            public override void BindToName(Type serializedType, out string assemblyName, out string typeName)
-            {
-                assemblyName = null;
-                typeName = serializedType.FullName;
-            }
-
-            public override Type BindToType(string assemblyName, string typeName)
-            {
-                return Type.GetType(typeName, true);
-            }
-        }
-
 
         public MyGraph<Location> Graph
         {
@@ -313,24 +295,17 @@ namespace DesktopUI
 
         public void GenerateArduinos(string filename)
         {
-            var binder = new TypeNameSerializationBinder();
-
-            var resString = JsonConvert.SerializeObject(_graph, Formatting.Indented, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.Auto,
-                Binder = binder
-            });
-
+ 
 
 
             //_graph = new MyGraph<Location>();
 
 
-            var deserialized = JsonConvert.DeserializeObject<MyGraph<Location>>(resString, new JsonSerializerSettings
+            /*var deserialized = JsonConvert.DeserializeObject<MyGraph<Location>>(resString, new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.Auto,
                 Binder = binder
-            });
+            });*/
 
 
             //_graph = deserialized;
@@ -349,6 +324,12 @@ namespace DesktopUI
         }
 
 
+        public void SaveGraph(string fileName)
+        {
+            new GraphPersister().Persist(_graph, fileName);
+
+
+        }
     }
 
 

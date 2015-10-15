@@ -81,6 +81,7 @@
     <Compile Include="BuildBlocks\Location.cs" />
     <Compile Include="BuildBlocks\Light.cs" />
     <Compile Include="BuildBlocks\Generated.cs" />
+    <Compile Include="Graph\GraphPersister.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

@@ -80,7 +80,7 @@
         <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="0" Background="#EEEEEE" Margin="0, 0, 0, 15">
             <StackPanel Margin="50, 10, 10, 10">
                 <TextBlock FontSize="14" Margin="0, 0, 0 , 10">Add a new Location:</TextBlock>
-                <TextBox Text="{Binding NewLocationName}" Width="150" Margin="0, 0, 0, 10"/>
+                <TextBox Text="{Binding NewLocationName}" Width="150" Margin="0, 0, 0, 10" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
                     <Button x:Name="AddNewLocation" Margin="0, 0, 10, 0" Width="100">Add new location</Button>
                     <Button x:Name="DeleteLocation" Margin="0, 0, 10, 0" Width="100">Delete location</Button>
@@ -89,7 +89,7 @@
 
             <StackPanel Margin="50, 10, 10, 10">
                 <TextBlock FontSize="14" Margin="0, 0, 0 , 10">Add a new Switch:</TextBlock>
-                <TextBox Text="{Binding NewSwitchName}" Width="150" Margin="0, 0, 0, 10"/>
+                <TextBox Text="{Binding NewSwitchName}" Width="150" Margin="0, 0, 0, 10" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
                     <Button x:Name="AddNewSwitch" Margin="0, 0, 10, 0" Width="100">Add new switch</Button>
                     <Button x:Name="DeleteSwitch" Margin="0, 0, 10, 0" Width="100">Delete switch</Button>
@@ -98,7 +98,7 @@
 
             <StackPanel Margin="50, 10, 10, 10">
                 <TextBlock FontSize="14" Margin="0, 0, 0 , 10">Add a new Light:</TextBlock>
-                <TextBox Text="{Binding NewLightName}" Width="150" Margin="0, 0, 0, 10"/>
+                <TextBox Text="{Binding NewLightName}" Width="150" Margin="0, 0, 0, 10" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
                     <Button x:Name="AddNewLight" Margin="0, 0, 10, 0" Width="100">Add new light</Button>
                     <Button x:Name="DeleteLight" Margin="0, 0, 10, 0" Width="100">Delete light</Button>
@@ -142,8 +142,11 @@
             </StackPanel>
 
             <StackPanel Margin="50, 10, 10, 10">
-                <TextBlock FontSize="14" Margin="0, 0, 0 , 10">GenerateFiles</TextBlock>
-                <Button x:Name="Generate">Generate</Button>
+                <TextBlock FontSize="14" Margin="0, 0, 0 , 10">Files</TextBlock>
+                <StackPanel Orientation="Vertical">
+                    <Button x:Name="Save">Save</Button>
+                    <Button x:Name="Generate">Generate</Button>
+                </StackPanel>
             </StackPanel>
 
         </StackPanel>

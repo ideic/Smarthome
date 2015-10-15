@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace DesktopUI
 {
@@ -45,8 +46,23 @@ namespace DesktopUI
             AssignLightToLocation.Click += AssignLightToLocationClick;
             RemoveSwitchFromLight.Click += RemoveSwitchFromLightOnClick;
 
+            Save.Click += SaveOnClick;
             Generate.Click += GenerateOnClick;
 
+        }
+
+        private void SaveOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.DefaultExt = "smh";
+            saveFileDialog.Filter = "SmartHome Files|*.smh";
+
+            var showDialog = saveFileDialog.ShowDialog();
+            if ((showDialog?? false) )
+            {
+                _mainViewModel.SaveGraph(saveFileDialog.FileName);
+            }
+  
         }
 
         private void RemoveSwitchFromLightOnClick(object sender, RoutedEventArgs routedEventArgs)
