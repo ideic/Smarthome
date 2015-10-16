@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using DesktopUI.BuildBlocks;
 using Newtonsoft.Json;
@@ -19,6 +20,33 @@ namespace DesktopUI.Graph
                 });
             
             File.WriteAllText(fileName, serializedJson);
+        }
+
+        public MyGraph<Location> Deserialize(string fileName)
+        {
+            var binder = new TypeNameSerializationBinder();
+            var graphString = File.ReadAllText(fileName);
+            var deserialized = JsonConvert.DeserializeObject<MyGraph<Location>>(graphString, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                Binder = binder
+            });
+
+            foreach (var edge in deserialized.Edges.OfType<MyEdge<Location>>().ToList())
+            {
+                var from = edge.Source;
+                var to = edge.Destination;
+
+                var vertices = deserialized.SubGraphs.SelectMany(subgraph => subgraph.Vertices).ToList();
+                vertices.AddRange(deserialized.Vertices);
+
+                deserialized.RemoveEdge(edge);
+                deserialized.AddEdge(
+                    new MyEdge<Location>(vertices.First(vertex => vertex.Name == from.Name),
+                    vertices.First(vertex => vertex.Name == to.Name),edge.DestinationArrow)
+                );
+            }
+            return deserialized;
         }
     }
 

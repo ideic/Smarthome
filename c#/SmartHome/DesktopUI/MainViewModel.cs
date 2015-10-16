@@ -11,7 +11,7 @@ namespace DesktopUI
     public class MainViewModel : INotifyPropertyChanged
     {
 
-        private readonly MyGraph<Location> _graph;
+        private MyGraph<Location> _graph;
 
         public MainViewModel()
         {
@@ -326,6 +326,12 @@ namespace DesktopUI
             new GraphPersister().Persist(_graph, fileName);
 
 
+        }
+
+        public void OpenGraph(string fileName)
+        {
+            _graph = new GraphPersister().Deserialize(fileName);
+            OnPropertyChanged("Graph");
         }
     }
 

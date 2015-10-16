@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using Microsoft.Win32;
 
 namespace DesktopUI
@@ -33,8 +34,22 @@ namespace DesktopUI
             AssignLightToLocation.Click += AssignLightToLocationClick;
             RemoveSwitchFromLight.Click += RemoveSwitchFromLightOnClick;
 
+            Open.Click += OpenOnClick;
             Save.Click += SaveOnClick;
             Generate.Click += GenerateOnClick;
+
+        }
+
+        private void OpenOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.DefaultExt = "smh";
+            openFileDialog.Filter = "SmartHome Files|*.smh";
+            var showDialog = openFileDialog.ShowDialog();
+            if ((showDialog ?? false))
+            {
+                _mainViewModel.OpenGraph(openFileDialog.FileName);
+            }
 
         }
 

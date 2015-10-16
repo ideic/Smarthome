@@ -8,7 +8,7 @@ namespace DesktopUI.Graph
         {
             Source = source;
             Destination = destination;
-            DestinationArrow = arrow;
+            DestinationArrow = new Arrow();
         }
 
         object IEdge.Source
