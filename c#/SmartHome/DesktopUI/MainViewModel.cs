@@ -17,16 +17,16 @@ namespace DesktopUI
         {
             _graph = new MyGraph<Location>();
 
-            /*      //_graph.AddVertex(new Location("Előszoba"));
+                  //_graph.AddVertex(new Location("Előszoba"));
             //_graph.AddVertex(new Location("Gépészet"));
             var subGraph = new MySubGraph<Location>(){Label = "Eloszoba"};
             _graph.AddSubGraph(subGraph);
 
-            subGraph.AddVertex(new Switch("EK1", "EK1"));
-            subGraph.AddVertex(new Light("LEK1", "LEK1"));
-
+            subGraph.AddVertex(new Switch("EK1", Generated.False));
+            subGraph.AddVertex(new Light("LEK1", Generated.False));
+           
             _graph.AddEdge(new MyEdge<Location>(subGraph.Vertices.First(), subGraph.Vertices.Last(), new Arrow()));
-
+            /*
             var subGraph2 = new MySubGraph<Location>(){Label = "Gepeszet"};
             _graph.AddSubGraph(subGraph2);
             subGraph2.AddVertex(new Switch("GK1", "GK1"));
@@ -70,19 +70,7 @@ namespace DesktopUI
                 return result;
             }
         }
-
-        public IEnumerable<T> GetBuildBlocks<T>() where T : Location
-        {
-            var result = new List<T>();
-            foreach (var subgraph in _graph.SubGraphs)
-            {
-                result.AddRange(subgraph.Vertices.OfType<T>());
-            }
-
-            result.AddRange(_graph.Vertices.OfType<T>());
-            return result;
-        }
-
+        
         public IEnumerable<string> LightNames
         {
             get 
@@ -94,6 +82,17 @@ namespace DesktopUI
             }
         }
 
+        private IEnumerable<T> GetBuildBlocks<T>() where T : Location
+        {
+            var result = new List<T>();
+            foreach (var subgraph in _graph.SubGraphs)
+            {
+                result.AddRange(subgraph.Vertices.OfType<T>());
+            }
+
+            result.AddRange(_graph.Vertices.OfType<T>());
+            return result;
+        }
 
         public void CreateNewLocation()
         {
@@ -128,7 +127,6 @@ namespace DesktopUI
             _graph.RemoveSubGraph(location);
         }
  
-
         public void CreateNewSwitch()
         {
             if (_graph.Vertices.Any(vertex => vertex.Name == NewSwitchName)) return;
@@ -187,7 +185,6 @@ namespace DesktopUI
             _graph.Refresh();
         }
 
-
         public void AssignSwitchToLocation()
         {
             var locationSubGraph = _graph.SubGraphs.First(graph => graph.Label == AssignSwitchToLocationLocation);
@@ -212,7 +209,7 @@ namespace DesktopUI
             RemoveBuildBlockFromLocation(new Switch(AssignLight2LocationLight, Generated.False), AssignLight2LocationLocation, AssignLight2LocationLight);
         }
 
-        public void RemoveBuildBlockFromLocation(Location buildBlock, string locationName, string buildblockName)
+        private void RemoveBuildBlockFromLocation(Location buildBlock, string locationName, string buildblockName)
         {
             var locationSubGraph = _graph.SubGraphs.FirstOrDefault(graph => graph.Label == locationName);
 
