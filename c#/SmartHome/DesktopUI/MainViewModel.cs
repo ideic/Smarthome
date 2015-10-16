@@ -19,13 +19,13 @@ namespace DesktopUI
 
                   //_graph.AddVertex(new Location("Előszoba"));
             //_graph.AddVertex(new Location("Gépészet"));
-            var subGraph = new MySubGraph<Location>(){Label = "Eloszoba"};
+           /* var subGraph = new MySubGraph<Location>(){Label = "Eloszoba"};
             _graph.AddSubGraph(subGraph);
 
             subGraph.AddVertex(new Switch("EK1", Generated.False));
             subGraph.AddVertex(new Light("LEK1", Generated.False));
            
-            _graph.AddEdge(new MyEdge<Location>(subGraph.Vertices.First(), subGraph.Vertices.Last(), new Arrow()));
+            _graph.AddEdge(new MyEdge<Location>(subGraph.Vertices.First(), subGraph.Vertices.Last(), new Arrow()));*/
             /*
             var subGraph2 = new MySubGraph<Location>(){Label = "Gepeszet"};
             _graph.AddSubGraph(subGraph2);
