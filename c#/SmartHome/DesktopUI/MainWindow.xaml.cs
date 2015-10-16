@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
-using Microsoft.Win32;
+using System.Windows.Forms;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace DesktopUI
 {
@@ -95,7 +97,12 @@ namespace DesktopUI
 
         private void GenerateOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
-            _mainViewModel.GenerateArduinos("filename");
+            FolderBrowserDialog folder = new FolderBrowserDialog();
+
+            if (folder.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                _mainViewModel.GenerateArduinos(folder.SelectedPath);
+            }
         }
 
         private void AddNewLocationClick(object sender, RoutedEventArgs e)

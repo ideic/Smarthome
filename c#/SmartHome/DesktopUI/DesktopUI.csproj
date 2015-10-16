@@ -49,6 +49,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -81,6 +82,16 @@
     <Compile Include="BuildBlocks\Location.cs" />
     <Compile Include="BuildBlocks\Light.cs" />
     <Compile Include="BuildBlocks\Generated.cs" />
+    <Compile Include="GeneratorSource\ArduinoGenerator.cs" />
+    <Compile Include="GeneratorSource\IdentityGenerator.cs" />
+    <Compile Include="GeneratorSource\Segment.cs" />
+    <Compile Include="GeneratorSource\BuildBlock.cs" />
+    <Compile Include="GeneratorSource\Server\ServerTemplate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ServerTemplate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GeneratorSource\Server\ServerTemplatePartial.cs" />
     <Compile Include="Graph\GraphPersister.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -110,6 +121,21 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="GeneratorSource\Client\Client.ino" />
+    <None Include="GeneratorSource\Client\DeviceHandler.ino">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="GeneratorSource\Common\RS485Handler.ino">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="GeneratorSource\Common\SmartHomeCommunication.ino">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="GeneratorSource\Server\Server.ino" />
+    <None Include="GeneratorSource\Server\ServerTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>ServerTemplate.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -121,7 +147,21 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="GeneratorSource\Client\DeviceHandler.h">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GeneratorSource\Common\Addresses.h" />
+    <Content Include="GeneratorSource\Common\RS485Handler.h">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GeneratorSource\Common\SmartHomeCommunication.h">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="lib\Graphviz4Net.dll" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

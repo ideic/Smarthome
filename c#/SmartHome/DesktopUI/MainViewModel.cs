@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using DesktopUI.Annotations;
 using DesktopUI.BuildBlocks;
+using DesktopUI.GeneratorSource;
 using DesktopUI.Graph;
 
 namespace DesktopUI
@@ -290,25 +291,12 @@ namespace DesktopUI
         }
 
 
-        public void GenerateArduinos(string filename)
+        public void GenerateArduinos(string foldername)
         {
- 
+            var sourceGen = new ArduinoGenerator();
+            sourceGen.GenerateFiles(_graph, foldername);
 
 
-            //_graph = new MyGraph<Location>();
-
-
-            /*var deserialized = JsonConvert.DeserializeObject<MyGraph<Location>>(resString, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.Auto,
-                Binder = binder
-            });*/
-
-
-            //_graph = deserialized;
-
-            _graph.Edges.Cast<MyEdge<Location>>().First().Source = (Location)_graph.SubGraphs.First().Vertices.First();
-            _graph.Edges.Cast<MyEdge<Location>>().First().Destination = (Location)_graph.SubGraphs.First().Vertices.Last();            
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
