@@ -7,7 +7,7 @@
 //     the code is regenerated.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace DesktopUI.GeneratorSource.Common
+namespace DesktopUI.GeneratorSource.Client
 {
     using System.Linq;
     using System.Text;
@@ -18,9 +18,9 @@ namespace DesktopUI.GeneratorSource.Common
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Common\AddressTemplate.tt"
+    #line 1 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Client\ClientTemplate.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "11.0.0.0")]
-    public partial class AddressTemplate : AddressTemplateBase
+    public partial class ClientTemplate : ClientTemplateBase
     {
 #line hidden
         /// <summary>
@@ -28,65 +28,100 @@ namespace DesktopUI.GeneratorSource.Common
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("#define ServerAddress B11001100\n\n");
+            this.Write("\r\n#include <Arduino.h>\r\n#include \"SmartHomeCommunication.h\"\r\n#include \"DeviceHand" +
+                    "ler.h\"\r\n#include \"Addresses.h\"\r\n\r\n#define DevicesNumber ");
             
-            #line 6 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Common\AddressTemplate.tt"
-foreach(var switchItem in SegmentManager.Switches)
-{
-            
-            #line default
-            #line hidden
-            this.Write("\n#define ");
-            
-            #line 6 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Common\AddressTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(switchItem.Name));
+            #line 12 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Client\ClientTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Arduino.DevicesNumber));
             
             #line default
             #line hidden
-            this.Write(" ");
+            this.Write("\r\n\r\nSHCommunication _com = SHCommunication();\r\nDeviceBase* _devices[DevicesNumber" +
+                    "];\r\n\r\n\r\nvoid setup() {\r\n  Serial.begin(9600, SERIAL_8E1);\r\n  while (!Serial) {\r\n" +
+                    "    ; // wait for serial port to connect. Needed for Leonardo only\r\n  }\r\n  ");
             
-            #line 6 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Common\AddressTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(switchItem.Address));
-            
-            #line default
-            #line hidden
-            
-            #line 6 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Common\AddressTemplate.tt"
+            #line 23 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Client\ClientTemplate.tt"
 
+  var deviceIndex = 0;
+  foreach(var device in Arduino.Devices)
+  {
+            
+            #line default
+            #line hidden
+            this.Write("  _devices[");
+            
+            #line 27 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Client\ClientTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(deviceIndex));
+            
+            #line default
+            #line hidden
+            this.Write("] = DeviceFactory::GetDevice(");
+            
+            #line 27 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Client\ClientTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(device.DeviceType));
+            
+            #line default
+            #line hidden
+            this.Write(", ");
+            
+            #line 27 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Client\ClientTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(device.Name));
+            
+            #line default
+            #line hidden
+            this.Write(", ");
+            
+            #line 27 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Client\ClientTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(device.PinNumber));
+            
+            #line default
+            #line hidden
+            this.Write(");\r\n  ");
+            
+            #line 28 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Client\ClientTemplate.tt"
+deviceIndex++;
+  }
+            
+            #line default
+            #line hidden
+            this.Write(@"
+  for (int i = 0; i<DevicesNumber; i++) {
+      _devices[i]->SetUp();  
+  }
+  _com.SetUp();
 }
-            
-            #line default
-            #line hidden
-            this.Write("\n");
-            
-            #line 6 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Common\AddressTemplate.tt"
-foreach(var lightItem in SegmentManager.Lights)
-{
-            
-            #line default
-            #line hidden
-            this.Write("\n#define ");
-            
-            #line 6 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Common\AddressTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(lightItem.Name));
-            
-            #line default
-            #line hidden
-            this.Write(" ");
-            
-            #line 6 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Common\AddressTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(lightItem.Address));
-            
-            #line default
-            #line hidden
-            this.Write("\n");
-            
-            #line 6 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Common\AddressTemplate.tt"
 
+void loop() {
+  DeviceBase* device = NULL;
+ 
+  if (_com.WeGotMessage()) {
+    device = FindDevice(_com.Address());
+    if (device != NULL) {
+       if (_com.WeGotGETMessage()) {
+         // in case of get
+         bool isDeviceOn = device->IsDeviceOn();
+         
+         _com.SendMessage(device->GetAddress(), _com.From(),   isDeviceOn ? MSG_DEVICE_ON : MSG_DEVICE_OFF);
+       } 
+       else if (_com.WeGotSETMessage()) {
+         device->SetDeviceState(_com.IsMessageSetOn());
+       }
+    }
+  } 
+
+  delay(20);
 }
-            
-            #line default
-            #line hidden
+
+DeviceBase* FindDevice(byte address) {
+  for(int i = 0; i< DevicesNumber; i++) {
+    if (_devices[i]->GetAddress() == address) {
+      return _devices[i];
+    }  
+  }
+  
+  return NULL;  
+}
+");
             return this.GenerationEnvironment.ToString();
         }
     }
@@ -98,7 +133,7 @@ foreach(var lightItem in SegmentManager.Lights)
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "11.0.0.0")]
-    public class AddressTemplateBase
+    public class ClientTemplateBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

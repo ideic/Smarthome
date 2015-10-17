@@ -1,9 +1,9 @@
 #include <SoftwareSerial.h>
 #include "RS485Handler.h"
 
-#define RXPin        10  //Serial Receive pin
-#define TXPin        11  //Serial Transmit pin
-#define TxControl     12   //RS485 Direction control
+#define RXPin        2  //Serial Receive pin
+#define TXPin        3  //Serial Transmit pin
+#define TxControl     4   //RS485 Direction control
 
 #define RS485Transmit    HIGH
 #define RS485Receive     LOW

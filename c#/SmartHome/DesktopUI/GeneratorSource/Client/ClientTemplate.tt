@@ -1,0 +1,66 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+#include <Arduino.h>
+#include "SmartHomeCommunication.h"
+#include "DeviceHandler.h"
+#include "Addresses.h"
+
+#define DevicesNumber <#=Arduino.DevicesNumber#>
+
+SHCommunication _com = SHCommunication();
+DeviceBase* _devices[DevicesNumber];
+
+
+void setup() {
+  Serial.begin(9600, SERIAL_8E1);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for Leonardo only
+  }
+  <#
+  var deviceIndex = 0;
+  foreach(var device in Arduino.Devices)
+  {#>
+  _devices[<#=deviceIndex#>] = DeviceFactory::GetDevice(<#=device.DeviceType#>, <#=device.Name#>, <#=device.PinNumber#>);
+  <#deviceIndex++;
+  }#>
+
+  for (int i = 0; i<DevicesNumber; i++) {
+      _devices[i]->SetUp();  
+  }
+  _com.SetUp();
+}
+
+void loop() {
+  DeviceBase* device = NULL;
+ 
+  if (_com.WeGotMessage()) {
+    device = FindDevice(_com.Address());
+    if (device != NULL) {
+       if (_com.WeGotGETMessage()) {
+         // in case of get
+         bool isDeviceOn = device->IsDeviceOn();
+         
+         _com.SendMessage(device->GetAddress(), _com.From(),   isDeviceOn ? MSG_DEVICE_ON : MSG_DEVICE_OFF);
+       } 
+       else if (_com.WeGotSETMessage()) {
+         device->SetDeviceState(_com.IsMessageSetOn());
+       }
+    }
+  } 
+
+  delay(20);
+}
+
+DeviceBase* FindDevice(byte address) {
+  for(int i = 0; i< DevicesNumber; i++) {
+    if (_devices[i]->GetAddress() == address) {
+      return _devices[i];
+    }  
+  }
+  
+  return NULL;  
+}

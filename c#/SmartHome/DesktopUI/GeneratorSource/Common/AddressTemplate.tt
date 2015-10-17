@@ -7,10 +7,8 @@
 
 <#foreach(var switchItem in SegmentManager.Switches)
 {#>
-#define <#=switchItem.Name#> <#=switchItem.Address#>
-<#
+#define <#=switchItem.Name#> <#=switchItem.Address#><#
 }#>
-
 <#foreach(var lightItem in SegmentManager.Lights)
 {#>
 #define <#=lightItem.Name#> <#=lightItem.Address#>

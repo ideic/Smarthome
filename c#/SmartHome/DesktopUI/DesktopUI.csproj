@@ -83,6 +83,15 @@
     <Compile Include="BuildBlocks\Light.cs" />
     <Compile Include="BuildBlocks\Generated.cs" />
     <Compile Include="GeneratorSource\ArduinoGenerator.cs" />
+    <Compile Include="GeneratorSource\Arduino.cs" />
+    <Compile Include="GeneratorSource\Client\ClientTemplate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClientTemplate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GeneratorSource\Client\ClientTemplatePartial.cs" />
+    <Compile Include="GeneratorSource\DeviceType.cs" />
+    <Compile Include="GeneratorSource\Device.cs" />
     <Compile Include="GeneratorSource\Common\AddressTemplate.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -129,6 +138,10 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="GeneratorSource\Client\Client.ino" />
+    <None Include="GeneratorSource\Client\ClientTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>ClientTemplate.cs</LastGenOutput>
+    </None>
     <None Include="GeneratorSource\Client\DeviceHandler.ino">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
