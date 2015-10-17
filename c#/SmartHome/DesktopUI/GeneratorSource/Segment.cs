@@ -24,7 +24,6 @@ namespace DesktopUI.GeneratorSource
         public List<BuildBlock> Lights
         {
             get { return _lights; }
-            set { _lights = value; }
         }
 
         public void AddSwitch(string name, string address)

@@ -4,7 +4,7 @@ namespace DesktopUI.GeneratorSource
 {
     internal class IdentityGenerator
     {
-        private int _address = 2;
+        private int _address = 0;
         private int _sequentialId = 0;
         private byte _abc = (byte)'A';
 
@@ -17,14 +17,16 @@ namespace DesktopUI.GeneratorSource
 
         public string NextSegmentName()
         {
+            var result = "Segment" + (char)_abc;
             _abc++;
-            return "Segment" + (char)_abc;
+            return result;
         }
 
         public string NextSequentialId()
         {
+            var result = _sequentialId.ToString(); 
             _sequentialId++;
-            return _sequentialId.ToString();
+            return result;
         }
     }
 }

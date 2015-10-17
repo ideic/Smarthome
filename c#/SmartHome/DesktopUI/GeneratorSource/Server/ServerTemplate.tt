@@ -8,10 +8,10 @@
 #include "Addresses.h"
 #include "SmartHomeCommunication.h"
 
-<# foreach (Segment segment in Segments) 
+<# foreach (Segment segment in SegmentManager.Segments) 
 {
 #>
-	#define <#=segment.Name#> <#=segment.Index#>
+#define <#=segment.Name#> <#=segment.Index#>
 <#}#>
 
 struct SegmentState {  
@@ -38,11 +38,11 @@ struct Device {
     byte _state;
   };
 
-#define SwitchNum 8
+#define SwitchNum <#=SegmentManager.SwitchNumbers#>
   
-SegmentState _deviceSegments[3];
+SegmentState _deviceSegments[<#=SegmentManager.Segments.Count#>];
 Device _switches[SwitchNum];
-Device _relays[10];
+Device _relays[<#=SegmentManager.LightNumbers#>];
 SHCommunication _com = SHCommunication();
 
 void setup() {
@@ -50,35 +50,28 @@ void setup() {
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
-  
-  _deviceSegments [0] = SegmentState(SegmentN, false);
-  _deviceSegments [1] = SegmentState(SegmentE, false);
-  _deviceSegments [2] = SegmentState(SegmentK, false);
-  
-  _switches[0] = Device(SegmentN, NK1, MSG_DEVICE_OFF);
-  _switches[1] = Device(SegmentN, NK2, MSG_DEVICE_OFF);
-  _switches[2] = Device(SegmentN, NK3, MSG_DEVICE_OFF);
 
-  _switches[3] = Device(SegmentE, EK1, MSG_DEVICE_OFF);
-  _switches[4] = Device(SegmentE, EK2, MSG_DEVICE_OFF);
+  <#
+	var segmentIdx = 0;
+	var switchIdx = 0;
+	var lightIdx = 0;
+	foreach (var segmentItem  in SegmentManager.Segments)
+	{#>
+	_deviceSegments [<#=segmentIdx#>] = SegmentState(<#=segmentItem.Name#>, false);
+		
+		<#foreach (var switchItem in segmentItem.Switches)
+		{#>
+	_switches[<#=switchIdx#>] = Device(<#=segmentItem.Name#>, <#=switchItem.Name#>, MSG_DEVICE_OFF);
+		<#	switchIdx++;
+		}#>
 
-  _switches[5] = Device(SegmentK, EK3, MSG_DEVICE_OFF);
-  _switches[6] = Device(SegmentK, KU1, MSG_DEVICE_OFF);
-  _switches[7] = Device(SegmentK, KK2, MSG_DEVICE_OFF);
-  
-  _relays[0] = Device(SegmentN, NL1, MSG_DEVICE_OFF);
-  _relays[1] = Device(SegmentN, NL2, MSG_DEVICE_OFF);
-
-  _relays[2] = Device(SegmentE, EL1, MSG_DEVICE_OFF);
-  
-  _relays[3] = Device(SegmentK, KUL1, MSG_DEVICE_OFF);
-  _relays[4] = Device(SegmentK, KUL2, MSG_DEVICE_OFF);
-  _relays[5] = Device(SegmentK, KUL3, MSG_DEVICE_OFF);
-  _relays[6] = Device(SegmentK, KUL4, MSG_DEVICE_OFF);
-  _relays[7] = Device(SegmentK, KUL5, MSG_DEVICE_OFF);
-  _relays[8] = Device(SegmentK, KUL6, MSG_DEVICE_OFF);
-  _relays[9] = Device(SegmentK, KUL7, MSG_DEVICE_OFF);
-  
+		<#foreach (var lightItem in segmentItem.Lights)
+		{#>
+	_relays[<#=lightIdx#>] = Device(<#=segmentItem.Name#>, <#=lightItem.Name#>, MSG_DEVICE_OFF);
+		<#	lightIdx++;
+		}
+		segmentIdx++;
+	}#>
   _com.SetUp();
 }
 

@@ -1,23 +1,15 @@
-﻿using System.Collections.Generic;
-
-namespace DesktopUI.GeneratorSource.Server
+﻿namespace DesktopUI.GeneratorSource.Server
 {
     public partial class ServerTemplate
     {
-        private readonly List<Segment> _segments;
-
-        public ServerTemplate()
+        public ServerTemplate(SegmentManager segmentManager)
         {
-            _segments = new List<Segment>();
-        }
-        public IEnumerable<Segment> Segments
-        {
-            get { return _segments; }
+            SegmentManager = segmentManager;
         }
 
-        public void AddSegmentItem(Segment segment)
+        public SegmentManager SegmentManager
         {
-            _segments.Add(segment);
+            get; private set;
         }
     }
 }

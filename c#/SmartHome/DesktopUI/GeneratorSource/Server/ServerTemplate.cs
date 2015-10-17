@@ -32,13 +32,13 @@ namespace DesktopUI.GeneratorSource.Server
                     "h\"\r\n\r\n");
             
             #line 11 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
- foreach (Segment segment in Segments) 
+ foreach (Segment segment in SegmentManager.Segments) 
 {
 
             
             #line default
             #line hidden
-            this.Write("\t#define ");
+            this.Write("#define ");
             
             #line 14 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(segment.Name));
@@ -59,54 +59,179 @@ namespace DesktopUI.GeneratorSource.Server
             
             #line default
             #line hidden
-            this.Write("\r\nstruct SegmentState {  \r\n   SegmentState ():_id(false), _isSegmentOn(false){};\r" +
-                    "\n    \r\n   SegmentState (byte id, bool isSegmentOn){\r\n       _id = id;\r\n       _i" +
-                    "sSegmentOn = isSegmentOn;\r\n    }\r\n    byte _id;\r\n    bool _isSegmentOn;    \r\n  }" +
-                    ";\r\n  \r\nstruct Device {\r\n    Device (): _id(0), _address(0), _state(0){}; \r\n    D" +
-                    "evice(byte id, byte address, byte state) {\r\n      _id = id;\r\n      _address = ad" +
-                    "dress;\r\n      _state = state;\r\n    }\r\n\r\n    byte _id;\r\n    byte _address; \r\n    " +
-                    "byte _state;\r\n  };\r\n\r\n#define SwitchNum 8\r\n  \r\nSegmentState _deviceSegments[3];\r" +
-                    "\nDevice _switches[SwitchNum];\r\nDevice _relays[10];\r\nSHCommunication _com = SHCom" +
-                    "munication();\r\n\r\nvoid setup() {\r\n  Serial.begin(9600, SERIAL_8E1);\r\n  while (!Se" +
-                    "rial) {\r\n    ; // wait for serial port to connect. Needed for Leonardo only\r\n  }" +
-                    "\r\n  \r\n  _deviceSegments [0] = SegmentState(SegmentN, false);\r\n  _deviceSegments " +
-                    "[1] = SegmentState(SegmentE, false);\r\n  _deviceSegments [2] = SegmentState(Segme" +
-                    "ntK, false);\r\n  \r\n  _switches[0] = Device(SegmentN, NK1, MSG_DEVICE_OFF);\r\n  _sw" +
-                    "itches[1] = Device(SegmentN, NK2, MSG_DEVICE_OFF);\r\n  _switches[2] = Device(Segm" +
-                    "entN, NK3, MSG_DEVICE_OFF);\r\n\r\n  _switches[3] = Device(SegmentE, EK1, MSG_DEVICE" +
-                    "_OFF);\r\n  _switches[4] = Device(SegmentE, EK2, MSG_DEVICE_OFF);\r\n\r\n  _switches[5" +
-                    "] = Device(SegmentK, EK3, MSG_DEVICE_OFF);\r\n  _switches[6] = Device(SegmentK, KU" +
-                    "1, MSG_DEVICE_OFF);\r\n  _switches[7] = Device(SegmentK, KK2, MSG_DEVICE_OFF);\r\n  " +
-                    "\r\n  _relays[0] = Device(SegmentN, NL1, MSG_DEVICE_OFF);\r\n  _relays[1] = Device(S" +
-                    "egmentN, NL2, MSG_DEVICE_OFF);\r\n\r\n  _relays[2] = Device(SegmentE, EL1, MSG_DEVIC" +
-                    "E_OFF);\r\n  \r\n  _relays[3] = Device(SegmentK, KUL1, MSG_DEVICE_OFF);\r\n  _relays[4" +
-                    "] = Device(SegmentK, KUL2, MSG_DEVICE_OFF);\r\n  _relays[5] = Device(SegmentK, KUL" +
-                    "3, MSG_DEVICE_OFF);\r\n  _relays[6] = Device(SegmentK, KUL4, MSG_DEVICE_OFF);\r\n  _" +
-                    "relays[7] = Device(SegmentK, KUL5, MSG_DEVICE_OFF);\r\n  _relays[8] = Device(Segme" +
-                    "ntK, KUL6, MSG_DEVICE_OFF);\r\n  _relays[9] = Device(SegmentK, KUL7, MSG_DEVICE_OF" +
-                    "F);\r\n  \r\n  _com.SetUp();\r\n}\r\n\r\nvoid loop() {\r\n  bool segmentStateChanged = false" +
-                    ";\r\n  \r\n  for (int switchIndex = 0; switchIndex<SwitchNum; switchIndex++) {\r\n \r\n " +
-                    "   byte deviceState = GetDeviceState (_switches[switchIndex]._address);\r\n    if " +
-                    "(deviceState != 0 && deviceState != _switches[switchIndex]._state) {\r\n      _swi" +
-                    "tches[switchIndex]._state = deviceState;\r\n      \r\n      int segmentId = _switche" +
-                    "s[switchIndex]._id;\r\n      _deviceSegments [segmentId]._isSegmentOn =  !_deviceS" +
-                    "egments [segmentId]._isSegmentOn;\r\n      ChangeSegmentRelaysState(segmentId);  \r" +
-                    "\n    }\r\n  }\r\n}\r\n\r\nbyte GetDeviceState(byte address) {\r\n  _com.SendMessage(Server" +
-                    "Address, address,  CMD_GET);\r\n  \r\n  unsigned long currentTime = millis();\r\n  //o" +
-                    "verflow\r\n  if ((currentTime + 100) < currentTime) {\r\n    delay(100);  \r\n    curr" +
-                    "entTime = millis();\r\n  }\r\n  \r\n  bool timeOut = false;\r\n \r\n  while (!(_com.WeGotM" +
-                    "essage() && _com.Address() == ServerAddress)) {\r\n    if ((currentTime + 100) < m" +
-                    "illis()) {\r\n         timeOut = true;\r\n        break;\r\n    } \r\n  }\r\n\r\n  if (!time" +
-                    "Out && (_com.From() == address)) {\r\n      return _com.Message();\r\n  }\r\n\r\n  retur" +
-                    "n 0;  \r\n  \r\n}\r\n\r\nvoid ChangeSegmentRelaysState(int segmentId) {\r\n  int relayInde" +
-                    "x = FindRelay(segmentId);\r\n  for (;_relays[relayIndex]._id == segmentId; relayIn" +
-                    "dex++) {\r\n    byte newState = _deviceSegments [segmentId]._isSegmentOn ?  CMD_SE" +
-                    "T_ON : CMD_SET_OFF;\r\n    \r\n    _com.SendMessage(ServerAddress, _relays[relayInde" +
-                    "x]._address, newState);\r\n    delay(50);\r\n    if (GetDeviceState(_relays[relayInd" +
-                    "ex]._address) != newState == CMD_SET_ON ?  MSG_DEVICE_ON : MSG_DEVICE_OFF) {\r\n  " +
-                    "    _com.SendMessage(ServerAddress, _relays[relayIndex]._address, newState);\r\n  " +
-                    "  }\r\n  }\r\n}\r\n\r\nint FindRelay (int segmentId) {\r\n  int index = 0;\r\n  while (_rela" +
-                    "ys[index]._id != segmentId) {\r\n    index++;  \r\n  }\r\n  \r\n  return index;\r\n}\r\n");
+            this.Write(@"
+struct SegmentState {  
+   SegmentState ():_id(false), _isSegmentOn(false){};
+    
+   SegmentState (byte id, bool isSegmentOn){
+       _id = id;
+       _isSegmentOn = isSegmentOn;
+    }
+    byte _id;
+    bool _isSegmentOn;    
+  };
+  
+struct Device {
+    Device (): _id(0), _address(0), _state(0){}; 
+    Device(byte id, byte address, byte state) {
+      _id = id;
+      _address = address;
+      _state = state;
+    }
+
+    byte _id;
+    byte _address; 
+    byte _state;
+  };
+
+#define SwitchNum ");
+            
+            #line 41 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(SegmentManager.SwitchNumbers));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n  \r\nSegmentState _deviceSegments[");
+            
+            #line 43 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(SegmentManager.Segments.Count));
+            
+            #line default
+            #line hidden
+            this.Write("];\r\nDevice _switches[SwitchNum];\r\nDevice _relays[");
+            
+            #line 45 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(SegmentManager.LightNumbers));
+            
+            #line default
+            #line hidden
+            this.Write("];\r\nSHCommunication _com = SHCommunication();\r\n\r\nvoid setup() {\r\n  Serial.begin(9" +
+                    "600, SERIAL_8E1);\r\n  while (!Serial) {\r\n    ; // wait for serial port to connect" +
+                    ". Needed for Leonardo only\r\n  }\r\n\r\n  ");
+            
+            #line 54 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
+
+	var segmentIdx = 0;
+	var switchIdx = 0;
+	var lightIdx = 0;
+	foreach (var segmentItem  in SegmentManager.Segments)
+	{
+            
+            #line default
+            #line hidden
+            this.Write("\t_deviceSegments [");
+            
+            #line 60 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(segmentIdx));
+            
+            #line default
+            #line hidden
+            this.Write("] = SegmentState(");
+            
+            #line 60 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(segmentItem.Name));
+            
+            #line default
+            #line hidden
+            this.Write(", false);\r\n\t\t\r\n\t\t");
+            
+            #line 62 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
+foreach (var switchItem in segmentItem.Switches)
+		{
+            
+            #line default
+            #line hidden
+            this.Write("\t_switches[");
+            
+            #line 64 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(switchIdx));
+            
+            #line default
+            #line hidden
+            this.Write("] = Device(");
+            
+            #line 64 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(segmentItem.Name));
+            
+            #line default
+            #line hidden
+            this.Write(", ");
+            
+            #line 64 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(switchItem.Name));
+            
+            #line default
+            #line hidden
+            this.Write(", MSG_DEVICE_OFF);\r\n\t\t");
+            
+            #line 65 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
+	switchIdx++;
+		}
+            
+            #line default
+            #line hidden
+            this.Write("\r\n\t\t");
+            
+            #line 68 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
+foreach (var lightItem in segmentItem.Lights)
+		{
+            
+            #line default
+            #line hidden
+            this.Write("\t_relays[");
+            
+            #line 70 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(lightIdx));
+            
+            #line default
+            #line hidden
+            this.Write("] = Device(");
+            
+            #line 70 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(segmentItem.Name));
+            
+            #line default
+            #line hidden
+            this.Write(", ");
+            
+            #line 70 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(lightItem.Name));
+            
+            #line default
+            #line hidden
+            this.Write(", MSG_DEVICE_OFF);\r\n\t\t");
+            
+            #line 71 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Server\ServerTemplate.tt"
+	lightIdx++;
+		}
+		segmentIdx++;
+	}
+            
+            #line default
+            #line hidden
+            this.Write("  _com.SetUp();\r\n}\r\n\r\nvoid loop() {\r\n  bool segmentStateChanged = false;\r\n  \r\n  f" +
+                    "or (int switchIndex = 0; switchIndex<SwitchNum; switchIndex++) {\r\n \r\n    byte de" +
+                    "viceState = GetDeviceState (_switches[switchIndex]._address);\r\n    if (deviceSta" +
+                    "te != 0 && deviceState != _switches[switchIndex]._state) {\r\n      _switches[swit" +
+                    "chIndex]._state = deviceState;\r\n      \r\n      int segmentId = _switches[switchIn" +
+                    "dex]._id;\r\n      _deviceSegments [segmentId]._isSegmentOn =  !_deviceSegments [s" +
+                    "egmentId]._isSegmentOn;\r\n      ChangeSegmentRelaysState(segmentId);  \r\n    }\r\n  " +
+                    "}\r\n}\r\n\r\nbyte GetDeviceState(byte address) {\r\n  _com.SendMessage(ServerAddress, a" +
+                    "ddress,  CMD_GET);\r\n  \r\n  unsigned long currentTime = millis();\r\n  //overflow\r\n " +
+                    " if ((currentTime + 100) < currentTime) {\r\n    delay(100);  \r\n    currentTime = " +
+                    "millis();\r\n  }\r\n  \r\n  bool timeOut = false;\r\n \r\n  while (!(_com.WeGotMessage() &" +
+                    "& _com.Address() == ServerAddress)) {\r\n    if ((currentTime + 100) < millis()) {" +
+                    "\r\n         timeOut = true;\r\n        break;\r\n    } \r\n  }\r\n\r\n  if (!timeOut && (_c" +
+                    "om.From() == address)) {\r\n      return _com.Message();\r\n  }\r\n\r\n  return 0;  \r\n  " +
+                    "\r\n}\r\n\r\nvoid ChangeSegmentRelaysState(int segmentId) {\r\n  int relayIndex = FindRe" +
+                    "lay(segmentId);\r\n  for (;_relays[relayIndex]._id == segmentId; relayIndex++) {\r\n" +
+                    "    byte newState = _deviceSegments [segmentId]._isSegmentOn ?  CMD_SET_ON : CMD" +
+                    "_SET_OFF;\r\n    \r\n    _com.SendMessage(ServerAddress, _relays[relayIndex]._addres" +
+                    "s, newState);\r\n    delay(50);\r\n    if (GetDeviceState(_relays[relayIndex]._addre" +
+                    "ss) != newState == CMD_SET_ON ?  MSG_DEVICE_ON : MSG_DEVICE_OFF) {\r\n      _com.S" +
+                    "endMessage(ServerAddress, _relays[relayIndex]._address, newState);\r\n    }\r\n  }\r\n" +
+                    "}\r\n\r\nint FindRelay (int segmentId) {\r\n  int index = 0;\r\n  while (_relays[index]." +
+                    "_id != segmentId) {\r\n    index++;  \r\n  }\r\n  \r\n  return index;\r\n}\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }
