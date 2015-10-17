@@ -37,6 +37,16 @@ namespace DesktopUI.GeneratorSource
             }
         }
 
+        public IEnumerable<Segment> Segments
+        {
+            get { return _segmentManager.Segments; }
+        } 
+
+        public IEnumerable<Arduino> Arduinos
+        {
+            get { return _arduinos; }
+        } 
+
         private void CopyArduinoFolder(Arduino arduino, string folder)
         {
             var folderName = Path.Combine(folder, arduino.Name);

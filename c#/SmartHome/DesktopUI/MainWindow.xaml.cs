@@ -103,6 +103,8 @@ namespace DesktopUI
             {
                 _mainViewModel.GenerateArduinos(folder.SelectedPath);
             }
+
+            new GenerationResult(_mainViewModel).Show();
         }
 
         private void AddNewLocationClick(object sender, RoutedEventArgs e)
