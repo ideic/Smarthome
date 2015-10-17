@@ -30,3 +30,9 @@
 
 # Debug files
 *.dSYM/
+
+/Output/
+/c#/SmartHome/DesktopUI/bin/
+/c#/SmartHome/DesktopUI/obj/Debug/
+/c#/SmartHome/*.DotSettings
+/c#/SmartHome/*.suo
