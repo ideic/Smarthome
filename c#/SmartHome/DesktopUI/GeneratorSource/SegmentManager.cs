@@ -26,7 +26,7 @@ namespace DesktopUI.GeneratorSource
             get { return _segments.SelectMany(segment => segment.Switches).ToList(); }
         }
 
-        public ICollection<BuildBlock> Lightes
+        public ICollection<BuildBlock> Lights
         {
             get { return _segments.SelectMany(segment => segment.Lights).ToList(); }
         } 
@@ -39,7 +39,7 @@ namespace DesktopUI.GeneratorSource
 
         public string LightNumbers
         {
-            get { return Lightes.Count.ToString(); }
+            get { return Lights.Count.ToString(); }
         }
         
     }

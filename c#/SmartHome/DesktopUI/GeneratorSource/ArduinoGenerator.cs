@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using DesktopUI.BuildBlocks;
+using DesktopUI.GeneratorSource.Common;
 using DesktopUI.GeneratorSource.Server;
 using DesktopUI.Graph;
 
@@ -33,10 +34,12 @@ namespace DesktopUI.GeneratorSource
             Directory.CreateDirectory(serverFolder);
 
 
-            var serverFileContent = GetServerFile();
+            var serverFileContent = GetServerFileContent();
 
             File.WriteAllText(Path.Combine(serverFolder, "Server.Ino"), serverFileContent);
 
+            var addressContent = GetAddressFileContent();
+            File.WriteAllText(Path.Combine(serverFolder, "Addresses.h"), addressContent);
 
             foreach (var commonFile in Directory.GetFiles(commonFolder))
             {
@@ -46,7 +49,14 @@ namespace DesktopUI.GeneratorSource
 
         }
 
-        private string GetServerFile()
+        private string GetAddressFileContent()
+        {
+            var addressTemplate = new AddressTemplate(_segmentManager);
+
+            return addressTemplate.TransformText();
+        }
+
+        private string GetServerFileContent()
         {
             var serverTemplate = new ServerTemplate(_segmentManager);
             return serverTemplate.TransformText();

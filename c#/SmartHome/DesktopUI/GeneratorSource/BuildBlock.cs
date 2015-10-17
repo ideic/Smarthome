@@ -8,7 +8,7 @@
             Address = address;
         }
 
-        protected string Address { get; private set; }
+        public string Address { get; private set; }
 
         public string Name { get; private set; }
     }
