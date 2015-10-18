@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Forms;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
@@ -44,11 +43,11 @@ namespace DesktopUI
 
         private void OpenOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            var openFileDialog = new OpenFileDialog();
             openFileDialog.DefaultExt = "smh";
             openFileDialog.Filter = "SmartHome Files|*.smh";
             var showDialog = openFileDialog.ShowDialog();
-            if ((showDialog ?? false))
+            if (((bool) showDialog))
             {
                 _mainViewModel.OpenGraph(openFileDialog.FileName);
             }
@@ -57,12 +56,10 @@ namespace DesktopUI
 
         private void SaveOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.DefaultExt = "smh";
-            saveFileDialog.Filter = "SmartHome Files|*.smh";
+            var saveFileDialog = new SaveFileDialog {DefaultExt = "smh", Filter = "SmartHome Files|*.smh"};
 
             var showDialog = saveFileDialog.ShowDialog();
-            if ((showDialog?? false) )
+            if (((bool) showDialog) )
             {
                 _mainViewModel.SaveGraph(saveFileDialog.FileName);
             }
@@ -97,7 +94,7 @@ namespace DesktopUI
 
         private void GenerateOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
-            FolderBrowserDialog folder = new FolderBrowserDialog();
+            var folder = new FolderBrowserDialog();
 
             if (folder.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
