@@ -104,7 +104,10 @@ namespace DesktopUI
                 _mainViewModel.GenerateArduinos(folder.SelectedPath);
             }
 
-            new GenerationResult(_mainViewModel).Show();
+            System.Windows.Forms.MessageBox.Show("Generation finished, please check folder: " + folder.SelectedPath,
+                                                           "Generation finsihed", MessageBoxButtons.OK,
+                                                           MessageBoxIcon.Information);
+
         }
 
         private void AddNewLocationClick(object sender, RoutedEventArgs e)

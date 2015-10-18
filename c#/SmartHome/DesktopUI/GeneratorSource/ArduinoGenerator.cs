@@ -35,6 +35,10 @@ namespace DesktopUI.GeneratorSource
             {
                 CopyArduinoFolder(arduino, foldername);
             }
+
+            var readme = new Readme(_segmentManager, _arduinos);
+            var readmeContent = readme.TransformText();
+            File.WriteAllText(Path.Combine(foldername, "readme.txt"), readmeContent);
         }
 
         public IEnumerable<Segment> Segments

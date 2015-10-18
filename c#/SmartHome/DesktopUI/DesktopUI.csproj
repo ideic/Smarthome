@@ -78,10 +78,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BuildBlocks\Switch.cs" />
-    <Page Include="GenerationResult.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -93,9 +89,6 @@
     <Compile Include="BuildBlocks\Location.cs" />
     <Compile Include="BuildBlocks\Light.cs" />
     <Compile Include="BuildBlocks\Generated.cs" />
-    <Compile Include="GenerationResult.xaml.cs">
-      <DependentUpon>GenerationResult.xaml</DependentUpon>
-    </Compile>
     <Compile Include="GeneratorSource\ArduinoGenerator.cs" />
     <Compile Include="GeneratorSource\Arduino.cs" />
     <Compile Include="GeneratorSource\Client\ClientTemplate.cs">
@@ -113,6 +106,12 @@
     </Compile>
     <Compile Include="GeneratorSource\Common\AddressTemplatePartial.cs" />
     <Compile Include="GeneratorSource\IdentityGenerator.cs" />
+    <Compile Include="GeneratorSource\Readme.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Readme.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GeneratorSource\ReadmePartial.cs" />
     <Compile Include="GeneratorSource\Segment.cs" />
     <Compile Include="GeneratorSource\BuildBlock.cs" />
     <Compile Include="GeneratorSource\SegmentManager.cs" />
@@ -168,6 +167,10 @@
     </None>
     <None Include="GeneratorSource\Common\SmartHomeCommunication.ino">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="GeneratorSource\Readme.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>Readme.cs</LastGenOutput>
     </None>
     <None Include="GeneratorSource\Server\Server.ino" />
     <None Include="GeneratorSource\Server\ServerTemplate.tt">
