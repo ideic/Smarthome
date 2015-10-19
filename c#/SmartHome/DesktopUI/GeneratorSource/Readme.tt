@@ -22,10 +22,10 @@ Segments
 <#}#>
 
 Arduinos:
-	<#foreach (var arduino in Arduinos){ #>
+<#foreach (var arduino in Arduinos){ #>
 Arduino Name: <#=arduino.Name#>
 	Devices:
 		<#foreach( var deviceItem in arduino.Devices) {#>
 		Name:<#=deviceItem.Name#> DeviceType: <#=deviceItem.DeviceType#> PinNumber:<#=deviceItem.PinNumber#> 
 		<#}#>
-   <#}#>
+<#}#>

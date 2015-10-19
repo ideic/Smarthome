@@ -105,7 +105,7 @@ foreach (var lightItem in segment.Lights) {
             
             #line default
             #line hidden
-            this.Write("\r\nArduinos:\r\n\t");
+            this.Write("\r\nArduinos:\r\n");
             
             #line 25 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
 foreach (var arduino in Arduinos){ 
@@ -154,7 +154,6 @@ foreach( var deviceItem in arduino.Devices) {
             
             #line default
             #line hidden
-            this.Write("   ");
             
             #line 31 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
 }
