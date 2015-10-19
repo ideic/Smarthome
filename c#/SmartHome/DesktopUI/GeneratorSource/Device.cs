@@ -9,7 +9,7 @@
             PinNumber = pinNumber.ToString();
         }
 
-        public string PinNumber { get; private set; }
+        public string PinNumber { get; set; }
 
         public string Name { get; private set; }
 

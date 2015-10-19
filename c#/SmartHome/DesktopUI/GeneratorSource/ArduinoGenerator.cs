@@ -74,11 +74,58 @@ namespace DesktopUI.GeneratorSource
                 var deviceNumber = 0;
                 var currentArduino = new Arduino(segment.Name);
 
-                Segment segment1 = segment;
+                var segment1 = segment;
                 deviceNumber = CreateArduinoCore(()=>segment1.Switches, deviceNumber, ref currentArduino, DeviceType.LightSwitchDeviceType);
                 CreateArduinoCore(() => segment1.Lights, deviceNumber, ref currentArduino, DeviceType.RelayDeviceType);
                 _arduinos.Add(currentArduino);
             }
+
+            ZipArduinos();
+        }
+
+        private void ZipArduinos()
+        {
+            var result = new List<Arduino>();
+            Arduino prevArduino = null;
+
+            foreach (var arduino in Arduinos)
+            {
+                if (prevArduino == null)
+                {
+                    prevArduino = arduino;
+                    continue;
+                }
+                if ((prevArduino.Devices.Count + arduino.Devices.Count) < MAX_DEVICE_NUMBER)
+                {
+                    var newArduino = MergeArduino(prevArduino, arduino);
+                    prevArduino = newArduino;
+                    continue;
+                }
+                result.Add(prevArduino);
+                prevArduino = arduino;
+            }
+
+            if (prevArduino != null)
+            {
+                result.Add(prevArduino);
+            }
+
+            _arduinos = result;
+        }
+
+        private Arduino MergeArduino(Arduino prevArduino, Arduino arduino)
+        {
+            var result = new Arduino(prevArduino.Name);
+
+            var pinNumber = 1;
+            foreach (var device in prevArduino.Devices.Union(arduino.Devices).OrderBy(device => device.DeviceType))
+            {
+                device.PinNumber = (pinNumber + START_PIN_NUMBER).ToString();
+                pinNumber++;
+                result.AddDevice(device);
+            }
+          
+            return result;
         }
 
         private int CreateArduinoCore(Func<IEnumerable<BuildBlock>> buildBlockProvider, int deviceNumber, ref Arduino currentArduino, DeviceType deviceType)

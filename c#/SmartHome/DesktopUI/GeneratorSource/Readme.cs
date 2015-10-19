@@ -36,120 +36,127 @@ foreach (var segment in Segments) {
             
             #line default
             #line hidden
-            this.Write("\tSegmentName: ");
+            this.Write("\r\n\tSegmentName: ");
             
-            #line 10 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            #line 11 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(segment.Name));
             
             #line default
             #line hidden
             this.Write("\r\n\tSwitches:\r\n\t\t");
             
-            #line 12 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            #line 13 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
 foreach (var switchItem in segment.Switches) {
             
             #line default
             #line hidden
             this.Write("\t\tSwitchName: ");
             
-            #line 13 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            #line 14 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(switchItem.Name));
             
             #line default
             #line hidden
             this.Write(" Address: ");
             
-            #line 13 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            #line 14 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(switchItem.Address));
             
             #line default
             #line hidden
-            this.Write(" ");
+            this.Write(" \r\n\t\t");
             
-            #line 13 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            #line 15 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
 }
             
             #line default
             #line hidden
-            this.Write("\r\n\tLights:\r\n\t\t");
+            this.Write("\r\n\r\n\tLights:\r\n\t\t");
             
-            #line 16 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            #line 19 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
 foreach (var lightItem in segment.Lights) {
             
             #line default
             #line hidden
             this.Write("\t\tSwitchName: ");
             
-            #line 17 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            #line 20 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(lightItem.Name));
             
             #line default
             #line hidden
             this.Write(" Address: ");
             
-            #line 17 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            #line 20 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(lightItem.Address));
             
             #line default
             #line hidden
-            this.Write(" ");
+            this.Write(" \r\n\t\t");
             
-            #line 17 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            #line 21 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
 }
             
             #line default
             #line hidden
             
-            #line 18 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            #line 22 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
 }
             
             #line default
             #line hidden
             this.Write("\r\nArduinos:\r\n\t");
             
-            #line 21 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            #line 25 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
 foreach (var arduino in Arduinos){ 
             
             #line default
             #line hidden
-            this.Write("\tArduino Name: arduino.Name\r\n\tDevices:\r\n\t\t");
+            this.Write("Arduino Name: ");
             
-            #line 24 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            #line 26 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(arduino.Name));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n\tDevices:\r\n\t\t");
+            
+            #line 28 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
 foreach( var deviceItem in arduino.Devices) {
             
             #line default
             #line hidden
             this.Write("\t\tName:");
             
-            #line 25 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            #line 29 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(deviceItem.Name));
             
             #line default
             #line hidden
             this.Write(" DeviceType: ");
             
-            #line 25 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            #line 29 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(deviceItem.DeviceType));
             
             #line default
             #line hidden
             this.Write(" PinNumber:");
             
-            #line 25 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            #line 29 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(deviceItem.PinNumber));
             
             #line default
             #line hidden
             this.Write(" \r\n\t\t");
             
-            #line 26 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            #line 30 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
 }
             
             #line default
             #line hidden
             this.Write("   ");
             
-            #line 27 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
+            #line 31 "C:\Projects\Smarthome\c#\SmartHome\DesktopUI\GeneratorSource\Readme.tt"
 }
             
             #line default

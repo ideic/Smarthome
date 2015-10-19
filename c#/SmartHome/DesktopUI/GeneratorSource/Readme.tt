@@ -7,19 +7,23 @@ This file contains all the information about segments and arduinos.
 
 Segments
 	<#foreach (var segment in Segments) { #>
+
 	SegmentName: <#=segment.Name#>
 	Switches:
 		<#foreach (var switchItem in segment.Switches) {#>
-		SwitchName: <#=switchItem.Name#> Address: <#=switchItem.Address#> <#}#>
+		SwitchName: <#=switchItem.Name#> Address: <#=switchItem.Address#> 
+		<#}#>
+
 
 	Lights:
 		<#foreach (var lightItem in segment.Lights) {#>
-		SwitchName: <#=lightItem.Name#> Address: <#=lightItem.Address#> <#}#>
+		SwitchName: <#=lightItem.Name#> Address: <#=lightItem.Address#> 
+		<#}#>
 <#}#>
 
 Arduinos:
 	<#foreach (var arduino in Arduinos){ #>
-	Arduino Name: arduino.Name
+Arduino Name: <#=arduino.Name#>
 	Devices:
 		<#foreach( var deviceItem in arduino.Devices) {#>
 		Name:<#=deviceItem.Name#> DeviceType: <#=deviceItem.DeviceType#> PinNumber:<#=deviceItem.PinNumber#> 
