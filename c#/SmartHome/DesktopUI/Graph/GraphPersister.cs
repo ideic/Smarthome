@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -10,7 +9,7 @@ namespace DesktopUI.Graph
 {
     public class GraphPersister
     {
-        public void Persist(MyGraph<Location> graph, Dictionary<string, List<string>> arduinoGroup, string fileName)
+        public void Persist(MyGraph<Location> graph, ArduinoGroupWrapper arduinoGroup, string fileName)
         {
             var binder = new TypeNameSerializationBinder();
             var serilaizeWrapper = new SerializeWrapper(graph, arduinoGroup);
@@ -24,7 +23,7 @@ namespace DesktopUI.Graph
             File.WriteAllText(fileName, serializedJson);
         }
 
-        public void Deserialize(string fileName, out MyGraph<Location> graph, out Dictionary<string, List<string>> arduinoGroup)
+        public void Deserialize(string fileName, out MyGraph<Location> graph, out ArduinoGroupWrapper arduinoGroup)
         {
             var binder = new TypeNameSerializationBinder();
             var graphString = File.ReadAllText(fileName);
@@ -56,13 +55,13 @@ namespace DesktopUI.Graph
 
     public class SerializeWrapper
     {
-        public SerializeWrapper(MyGraph<Location> graph, Dictionary<string, List<string>> arduinoGroup)
+        public SerializeWrapper(MyGraph<Location> graph, ArduinoGroupWrapper arduinoGroup)
         {
             Graph = graph;
             ArduinoGroup = arduinoGroup;
         }
 
-        public Dictionary<string, List<string>> ArduinoGroup { get; set; }
+        public ArduinoGroupWrapper ArduinoGroup{ get; set; }
 
         public MyGraph<Location> Graph { get; set; }
     }

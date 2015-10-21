@@ -18,7 +18,7 @@ namespace DesktopUI.GeneratorSource
         private const int START_PIN_NUMBER = 4;
         private const int MAX_DEVICE_NUMBER = 9;
 
-        public void GenerateFiles(MyGraph<Location> graph, string foldername)
+        public void GenerateFiles(MyGraph<Location> graph, ArduinoGroupWrapper arduinoGroup, string foldername)
         {
             CreateSegments(graph);
 

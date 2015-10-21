@@ -218,16 +218,16 @@
         
         <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
             <ScrollViewer>
-                <ListView ItemsSource="{Binding Path=ArduinoGroups}" Name="ArdGroups">     
+                <ListView ItemsSource="{Binding Path=ArduinoGroups.ArduinoGroups}" Name="ArdGroups">     
              
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Arduino Group: " />
-                                <TextBlock Text="{Binding  Key}" FontWeight="Bold" />
+                                    <TextBlock Text="{Binding  Name}" FontWeight="Bold" />
                             </StackPanel>
-                            <ListView ItemsSource="{Binding Value}" Background="Transparent" BorderThickness="0">
+                                <ListView ItemsSource="{Binding Locations}" Background="Transparent" BorderThickness="0">
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,0"></StackPanel>
