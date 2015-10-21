@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -9,11 +10,12 @@ namespace DesktopUI.Graph
 {
     public class GraphPersister
     {
-        public void Persist(MyGraph<Location> graph, string fileName)
+        public void Persist(MyGraph<Location> graph, Dictionary<string, List<string>> arduinoGroup, string fileName)
         {
             var binder = new TypeNameSerializationBinder();
+            var serilaizeWrapper = new SerializeWrapper(graph, arduinoGroup);
 
-            var serializedJson = JsonConvert.SerializeObject(graph, Formatting.Indented, new JsonSerializerSettings
+            var serializedJson = JsonConvert.SerializeObject(serilaizeWrapper, Formatting.Indented, new JsonSerializerSettings
                 {
                     TypeNameHandling = TypeNameHandling.Auto,
                     Binder = binder
@@ -22,32 +24,47 @@ namespace DesktopUI.Graph
             File.WriteAllText(fileName, serializedJson);
         }
 
-        public MyGraph<Location> Deserialize(string fileName)
+        public void Deserialize(string fileName, out MyGraph<Location> graph, out Dictionary<string, List<string>> arduinoGroup)
         {
             var binder = new TypeNameSerializationBinder();
             var graphString = File.ReadAllText(fileName);
-            var deserialized = JsonConvert.DeserializeObject<MyGraph<Location>>(graphString, new JsonSerializerSettings
+            var deserialized = JsonConvert.DeserializeObject<SerializeWrapper>(graphString, new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.Auto,
                 Binder = binder
             });
 
-            foreach (var edge in deserialized.Edges.OfType<MyEdge<Location>>().ToList())
+            graph = deserialized.Graph;
+            arduinoGroup = deserialized.ArduinoGroup;
+
+            foreach (var edge in graph.Edges.OfType<MyEdge<Location>>().ToList())
             {
                 var from = edge.Source;
                 var to = edge.Destination;
 
-                var vertices = deserialized.SubGraphs.SelectMany(subgraph => subgraph.Vertices).ToList();
-                vertices.AddRange(deserialized.Vertices);
+                var vertices = graph.SubGraphs.SelectMany(subgraph => subgraph.Vertices).ToList();
+                vertices.AddRange(graph.Vertices);
 
-                deserialized.RemoveEdge(edge);
-                deserialized.AddEdge(
+                graph.RemoveEdge(edge);
+                graph.AddEdge(
                     new MyEdge<Location>(vertices.First(vertex => vertex.Name == from.Name),
                     vertices.First(vertex => vertex.Name == to.Name),edge.DestinationArrow)
                 );
             }
-            return deserialized;
         }
+    }
+
+    public class SerializeWrapper
+    {
+        public SerializeWrapper(MyGraph<Location> graph, Dictionary<string, List<string>> arduinoGroup)
+        {
+            Graph = graph;
+            ArduinoGroup = arduinoGroup;
+        }
+
+        public Dictionary<string, List<string>> ArduinoGroup { get; set; }
+
+        public MyGraph<Location> Graph { get; set; }
     }
 
     public class TypeNameSerializationBinder : SerializationBinder

@@ -110,7 +110,6 @@ namespace DesktopUI
         public Dictionary<string, List<string>> ArduinoGroups
         {
             get { return _arduinoGroup; }
-            set { _arduinoGroup = value; }
         }
 
         public string AssignLocationToArduinoGroupsLocation { get; set; }
@@ -333,18 +332,21 @@ namespace DesktopUI
 
         public void SaveGraph(string fileName)
         {
-            new GraphPersister().Persist(_graph, fileName);
+            new GraphPersister().Persist(_graph, _arduinoGroup, fileName);
 
 
         }
 
         public void OpenGraph(string fileName)
         {
-            _graph = new GraphPersister().Deserialize(fileName);
+            new GraphPersister().Deserialize(fileName, out _graph, out _arduinoGroup);
             OnPropertyChanged("Graph");
             OnPropertyChanged("LocationNames");
             OnPropertyChanged("LightNames");
             OnPropertyChanged("SwitchNames");
+            OnPropertyChanged("ArduinoGroupNames");
+            OnPropertyChanged("ArduinoGroups");
+
         }
 
         public void AddArduinoGroup()
