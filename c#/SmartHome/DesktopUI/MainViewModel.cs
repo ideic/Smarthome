@@ -13,6 +13,7 @@ namespace DesktopUI
     {
 
         private MyGraph<Location> _graph;
+        private Dictionary<string, List<string>> _arduinoGroup = new Dictionary<string, List<string>>();
 
         public MainViewModel()
         {
@@ -32,6 +33,9 @@ namespace DesktopUI
             _graph.AddSubGraph(subGraph2);
             subGraph2.AddVertex(new Switch("GK1", "GK1"));
             */
+          /*  _arduinoGroup.Add("eloter", new List<string>(){"asdas", "masodik"});
+            _arduinoGroup.Add("eloter2", new List<string>() { "asdas", "masodik" });
+            _arduinoGroup.Add("eloter3", new List<string>());*/
         }
 
         public MyGraph<Location> Graph
@@ -55,6 +59,9 @@ namespace DesktopUI
 
         public string AssignLight2LocationLocation { get; set; }
         public string AssignLight2LocationLight { get; set; }
+
+        public string ArduinoGroupName { get; set; }
+
 
         public IEnumerable<string> LocationNames
         {
@@ -94,6 +101,21 @@ namespace DesktopUI
             result.AddRange(_graph.Vertices.OfType<T>());
             return result;
         }
+
+        public IEnumerable<string> ArduinoGroupNames
+        {
+            get { return _arduinoGroup.Keys.OrderBy(key => key); }
+        }
+
+        public Dictionary<string, List<string>> ArduinoGroups
+        {
+            get { return _arduinoGroup; }
+            set { _arduinoGroup = value; }
+        }
+
+        public string AssignLocationToArduinoGroupsLocation { get; set; }
+
+        public string AssignLocationToArduinoGroupsGroup { get; set; }
 
         public void CreateNewLocation()
         {
@@ -320,6 +342,50 @@ namespace DesktopUI
         {
             _graph = new GraphPersister().Deserialize(fileName);
             OnPropertyChanged("Graph");
+            OnPropertyChanged("LocationNames");
+            OnPropertyChanged("LightNames");
+            OnPropertyChanged("SwitchNames");
+        }
+
+        public void AddArduinoGroup()
+        {
+            if (_arduinoGroup.ContainsKey(ArduinoGroupName)) return;
+            _arduinoGroup[ArduinoGroupName] = new List<string>();
+            OnPropertyChanged("ArduinoGroupNames");
+            OnPropertyChanged("ArduinoGroups");
+        }
+
+        public void DeleteArduinoGroup()
+        {
+            if (!_arduinoGroup.ContainsKey(ArduinoGroupName)) return;
+
+            _arduinoGroup.Remove(ArduinoGroupName);
+            OnPropertyChanged("ArduinoGroupNames");
+            OnPropertyChanged("ArduinoGroups");
+        }
+
+        public void AssignLocationToArduinoGroup()
+        {
+            List<string> group;
+            if (!_arduinoGroup.TryGetValue(AssignLocationToArduinoGroupsGroup, out group)) return;
+
+            if (group.Contains(AssignLocationToArduinoGroupsLocation)) return;
+
+            group.Add(AssignLocationToArduinoGroupsLocation);
+            OnPropertyChanged("ArduinoGroups");
+
+        }
+
+        public void RemoveLocationFromArduinoGroup()
+        {
+            List<string> group;
+            if (!_arduinoGroup.TryGetValue(AssignLocationToArduinoGroupsLocation, out group)) return;
+
+            if (group.Contains(AssignLocationToArduinoGroupsGroup)) return;
+
+            group.Remove(AssignLocationToArduinoGroupsGroup);
+            OnPropertyChanged("ArduinoGroups");
+
         }
     }
 

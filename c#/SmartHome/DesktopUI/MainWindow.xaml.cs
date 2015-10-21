@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Forms;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
@@ -35,10 +36,51 @@ namespace DesktopUI
             AssignLightToLocation.Click += AssignLightToLocationClick;
             RemoveSwitchFromLight.Click += RemoveSwitchFromLightOnClick;
 
+            AddNewArduinoGroup.Click += AddNewArduinoGroup_Click;
+            DeleteArduinoGroup.Click += DeleteArduinoGroupOnClick;
+
+            AssignLocationToArduinoGroup.Click += AssignLocationToArduinoGroupOnClick;
+            RemoveLocationFromArduinoGroup.Click += RemoveLocationFromArduinoGroupOnClick;
+
             Open.Click += OpenOnClick;
             Save.Click += SaveOnClick;
             Generate.Click += GenerateOnClick;
 
+        }
+
+        private void RemoveLocationFromArduinoGroupOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            _mainViewModel.AssignLocationToArduinoGroupsLocation = (string)AssignLocationToArduinoGroupsLocation.SelectedItem;
+            _mainViewModel.AssignLocationToArduinoGroupsGroup = (string)AssignLocationToArduinoGroupsGroup.SelectedItem;
+            _mainViewModel.RemoveLocationFromArduinoGroup();
+            
+        }
+
+        private void AssignLocationToArduinoGroupOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            _mainViewModel.AssignLocationToArduinoGroupsLocation = (string)AssignLocationToArduinoGroupsLocation.SelectedItem;
+            _mainViewModel.AssignLocationToArduinoGroupsGroup = (string)AssignLocationToArduinoGroupsGroup.SelectedItem;
+            _mainViewModel.AssignLocationToArduinoGroup();
+
+            RefreshArduinoGroups();
+        }
+
+        private void DeleteArduinoGroupOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            _mainViewModel.DeleteArduinoGroup();
+            RefreshArduinoGroups();
+        }
+
+        void AddNewArduinoGroup_Click(object sender, RoutedEventArgs e)
+        {
+            _mainViewModel.AddArduinoGroup();
+            RefreshArduinoGroups();
+        }
+
+        private void RefreshArduinoGroups()
+        {
+            ArdGroups.DataContext = null;
+            ArdGroups.DataContext = _mainViewModel;
         }
 
         private void OpenOnClick(object sender, RoutedEventArgs routedEventArgs)

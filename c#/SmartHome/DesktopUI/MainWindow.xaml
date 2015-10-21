@@ -75,11 +75,13 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition>
-            </RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="50"> </RowDefinition>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="0" Background="#EEEEEE" Margin="0, 0, 0, 15">
+        <ScrollViewer Grid.Column="0" Grid.Row="0">
+        <StackPanel Orientation="Vertical"  Background="#EEEEEE" Margin="0, 0, 0, 15">
+            
             <StackPanel Margin="10, 10, 0, 0" Orientation="Horizontal">
                 <StackPanel Orientation="Vertical" Margin="0, 0, 0, 10">
                     <TextBlock FontSize="14" Margin="0, 0, 0 , 10">Add a new Location:</TextBlock>
@@ -95,18 +97,18 @@
                 <StackPanel Orientation="Vertical" Margin="0, 0, 0, 10">
                     <TextBlock FontSize="14" Margin="0, 0, 0 , 10">Add a new Switch:</TextBlock>
                     <TextBox Text="{Binding NewSwitchName}" Width="150" Margin="0, 0, 0, 10" HorizontalAlignment="Left"/>
-                </StackPanel>    
+                </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="30, 0, 0, 0">
                     <Button x:Name="AddNewSwitch" Margin="0, 0, 0, 10" Width="100">Add new switch</Button>
                     <Button x:Name="DeleteSwitch" Margin="0, 0, 0, 0" Width="100">Delete switch</Button>
                 </StackPanel>
-             </StackPanel>
+            </StackPanel>
 
             <StackPanel Margin="10, 10, 10, 10" Orientation="Horizontal">
                 <StackPanel Orientation="Vertical" Margin="0, 0, 0, 10">
                     <TextBlock FontSize="14" Margin="0, 0, 0 , 10">Add a new Light:</TextBlock>
                     <TextBox Text="{Binding NewLightName}" Width="150" Margin="0, 0, 0, 10" HorizontalAlignment="Left"/>
-                 </StackPanel>   
+                </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="30, 0, 0, 0">
                     <Button x:Name="AddNewLight" Margin="0, 0, 0, 10" Width="100">Add new light</Button>
                     <Button x:Name="DeleteLight" Margin="0, 0, 0, 0" Width="100">Delete light</Button>
@@ -134,7 +136,7 @@
                     <StackPanel Orientation="Horizontal">
                         <ComboBox x:Name="AssignLight2LocationLocation" ItemsSource="{Binding LocationNames}" Margin="0, 0, 10, 0" Width="100"/>
                         <ComboBox x:Name="AssignLight2LocationLight" ItemsSource="{Binding LightNames}" Margin="0, 0, 0, 0" Width="100"/>
-                    </StackPanel>    
+                    </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="10, 0, 0, 10">
                     <Button x:Name="AssignLightToLocation" Margin="0, 0, 0, 10">Assign Light</Button>
@@ -147,13 +149,40 @@
                     <StackPanel Orientation="Horizontal">
                         <ComboBox x:Name="AssignSwitchToLightSwitch" ItemsSource="{Binding SwitchNames}" Margin="0, 0, 10, 0" Width="100"/>
                         <ComboBox x:Name="AssignSwitchToLightLight" ItemsSource="{Binding LightNames}" Margin="0, 0, 0, 0" Width="100"/>
-                    </StackPanel>    
+                    </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="10, 0, 0, 10">
                     <Button x:Name="AssignSwitchToLight" Margin="0, 0, 0, 10">Assign Switch To Light</Button>
                     <Button x:Name="RemoveSwitchFromLight" Margin="0, 0, 0, 0">Remove Switch From Light</Button>
                 </StackPanel>
             </StackPanel>
+
+            <StackPanel Margin="10, 10, 10, 10" Orientation="Horizontal">
+                <StackPanel Orientation="Vertical" Margin="0, 0, 0, 10">
+                    <TextBlock FontSize="14" Margin="0, 0, 0 , 10">Add a new ArduinoGroup:</TextBlock>
+                    <TextBox Text="{Binding ArduinoGroupName}" Width="150" Margin="0, 0, 0, 10" HorizontalAlignment="Left"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="30, 0, 0, 0">
+                    <Button x:Name="AddNewArduinoGroup" Margin="0, 0, 0, 10" >Add new Arduino group</Button>
+                    <Button x:Name="DeleteArduinoGroup" Margin="0, 0, 0, 0" >Delete Arduino group</Button>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Margin="10, 10, 10, 10" Orientation="Horizontal">
+                <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+                    <TextBlock FontSize="14" Margin="0, 0, 0 , 10">Assign Location to Arduino Group:</TextBlock>
+                    <StackPanel Orientation="Horizontal">
+                        <ComboBox x:Name="AssignLocationToArduinoGroupsLocation" ItemsSource="{Binding LocationNames}" Margin="0, 0, 10, 0" Width="100"/>
+                        <ComboBox x:Name="AssignLocationToArduinoGroupsGroup" ItemsSource="{Binding ArduinoGroupNames}" Margin="0, 0, 0, 0" Width="100"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="10, 0, 0, 10">
+                    <Button x:Name="AssignLocationToArduinoGroup" Margin="0, 0, 0, 10">Assign Location To Arduino Group</Button>
+                    <Button x:Name="RemoveLocationFromArduinoGroup" Margin="0, 0, 0, 0">Remove Location From Arduino Group</Button>
+                </StackPanel>
+            </StackPanel>
+
+
 
             <StackPanel Margin="10, 10, 10, 10">
                 <TextBlock FontSize="14" Margin="0, 0, 0 , 10">Files</TextBlock>
@@ -163,9 +192,9 @@
                     <Button x:Name="Generate" Width="100">Generate</Button>
                 </StackPanel>
             </StackPanel>
-
+            
         </StackPanel>
-
+        </ScrollViewer>
         <Controls:ZoomControl Grid.Column="1" Grid.Row="0">
 
             <WPF:GraphLayout 
@@ -186,5 +215,44 @@
                 </WPF:GraphLayout.Resources>
             </WPF:GraphLayout>
         </Controls:ZoomControl>
+        
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+            <ScrollViewer>
+                <ListView ItemsSource="{Binding Path=ArduinoGroups}" Name="ArdGroups">     
+             
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Arduino Group: " />
+                                <TextBlock Text="{Binding  Key}" FontWeight="Bold" />
+                            </StackPanel>
+                            <ListView ItemsSource="{Binding Value}" Background="Transparent" BorderThickness="0">
+                                <ListView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,0"></StackPanel>
+                                    </ItemsPanelTemplate>
+                                        
+                                </ListView.ItemsPanel>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                                            <TextBlock Text="{Binding }" FontWeight="Bold"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,0"></StackPanel>
+                        </ItemsPanelTemplate>
+
+                 </ListView.ItemsPanel>
+                </ListView>
+            </ScrollViewer>    
+        </StackPanel>
     </Grid>
 </Window>
