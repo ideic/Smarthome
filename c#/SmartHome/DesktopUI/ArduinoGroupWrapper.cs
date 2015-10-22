@@ -39,7 +39,7 @@ namespace DesktopUI
             Locations = new List<string>();
             Name = arduinoGroupName;
         }
-        public string Name { get; private set; }
+        public string Name { get; set; }
         public ICollection<string> Locations { get; set; }
     }
 }

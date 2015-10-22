@@ -29,7 +29,7 @@ namespace DesktopUI.GeneratorSource
 
             CopyServerFolder(foldername);
 
-            CreateArduinos();
+            CreateArduinos(graph, arduinoGroup);
 
             foreach (var arduino in _arduinos)
             {
@@ -40,6 +40,7 @@ namespace DesktopUI.GeneratorSource
             var readmeContent = readme.TransformText();
             File.WriteAllText(Path.Combine(foldername, "readme.txt"), readmeContent);
         }
+
 
         public IEnumerable<Segment> Segments
         {
@@ -66,29 +67,74 @@ namespace DesktopUI.GeneratorSource
             }
         }
 
-        private void CreateArduinos()
+        private void CreateArduinos(MyGraph<Location> graph, ArduinoGroupWrapper arduinoGroup)
         {
+            var groupSegment = new Dictionary<string, List<Segment>>();
             _arduinos = new List<Arduino>();
+
             foreach (var segment in _segmentManager.Segments)
             {
-                var deviceNumber = 0;
-                var currentArduino = new Arduino(segment.Name);
+                var buildBlock = segment.Switches.First();
+                var locationName =
+                    graph.SubGraphs.First(subGraph => subGraph.Vertices.Any(vertex => vertex.Name == buildBlock.Name)).Label;
 
-                var segment1 = segment;
-                deviceNumber = CreateArduinoCore(()=>segment1.Switches, deviceNumber, ref currentArduino, DeviceType.LightSwitchDeviceType);
-                CreateArduinoCore(() => segment1.Lights, deviceNumber, ref currentArduino, DeviceType.RelayDeviceType);
-                _arduinos.Add(currentArduino);
+                var agroup =
+                    arduinoGroup.ArduinoGroups.FirstOrDefault(
+                        group => group.Locations.Any(location => location == locationName));
+                if (agroup != null)
+                {
+                    if (!groupSegment.ContainsKey(agroup.Name))
+                    {
+                        groupSegment[agroup.Name] = new List<Segment>();
+                    }
+                    groupSegment[agroup.Name].Add(segment);
+                }
+                else
+                {
+                    if (!groupSegment.ContainsKey(locationName))
+                    {
+                        groupSegment[locationName] = new List<Segment>();
+                    }
+
+                    groupSegment[locationName].Add(segment);
+                }
             }
 
-            ZipArduinos();
+            foreach (var groupSegmentItem in groupSegment)
+            {
+                var arduinos = new List<Arduino>();
+                foreach (var segment in groupSegmentItem.Value)
+                {
+                    var deviceNumber = 0;
+                    var currentArduino = new Arduino(groupSegmentItem.Key);
+
+                    var segment1 = segment;
+                    deviceNumber = CreateArduinoCore(()=>segment1.Switches, deviceNumber, ref currentArduino, DeviceType.LightSwitchDeviceType, arduinos);
+                    CreateArduinoCore(() => segment1.Lights, deviceNumber, ref currentArduino, DeviceType.RelayDeviceType, arduinos);
+                    arduinos.Add(currentArduino);
+                }                
+                _arduinos.AddRange(ZipArduinos(arduinos));
+            }
+            _arduinos.Sort((x,y) => String.Compare(x.Name, y.Name, StringComparison.Ordinal));
+
+            Arduino prevArduino = null;
+            foreach (var arduino in _arduinos)
+            {
+                if (arduino.Name == (prevArduino == null ? null :prevArduino.Name))
+                {
+                    arduino.Name += "I";
+                }
+
+                prevArduino = arduino;
+            }
         }
 
-        private void ZipArduinos()
+        private List<Arduino> ZipArduinos(List<Arduino> arduinos)
         {
             var result = new List<Arduino>();
             Arduino prevArduino = null;
 
-            foreach (var arduino in Arduinos)
+            foreach (var arduino in arduinos)
             {
                 if (prevArduino == null)
                 {
@@ -110,7 +156,7 @@ namespace DesktopUI.GeneratorSource
                 result.Add(prevArduino);
             }
 
-            _arduinos = result;
+            return result;
         }
 
         private Arduino MergeArduino(Arduino prevArduino, Arduino arduino)
@@ -128,14 +174,14 @@ namespace DesktopUI.GeneratorSource
             return result;
         }
 
-        private int CreateArduinoCore(Func<IEnumerable<BuildBlock>> buildBlockProvider, int deviceNumber, ref Arduino currentArduino, DeviceType deviceType)
+        private int CreateArduinoCore(Func<IEnumerable<BuildBlock>> buildBlockProvider, int deviceNumber, ref Arduino currentArduino, DeviceType deviceType, List<Arduino> arduinos)
         {
             foreach (var buildBlockItem in buildBlockProvider())
             {
                 deviceNumber++;
                 if (deviceNumber >= MAX_DEVICE_NUMBER)
                 {
-                    _arduinos.Add(currentArduino);
+                    arduinos.Add(currentArduino);
                     var arduinoName = currentArduino.Name + "_1";
                     currentArduino = new Arduino(arduinoName);
                     deviceNumber = 1;

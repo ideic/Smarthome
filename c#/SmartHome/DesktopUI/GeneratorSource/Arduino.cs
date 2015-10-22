@@ -15,7 +15,7 @@ namespace DesktopUI.GeneratorSource
 
         public ICollection<Device> Devices { get; private set; }
 
-        public string Name { get; private set ; }
+        public string Name { get; set ; }
 
         public void AddDevice(Device device)
         {
