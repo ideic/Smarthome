@@ -15,8 +15,11 @@ namespace DesktopUI.GeneratorSource
         private readonly IdentityGenerator _identity = new IdentityGenerator();
         private SegmentManager _segmentManager;
         private List<Arduino> _arduinos;
-        private const int START_PIN_NUMBER = 4;
-        private const int MAX_DEVICE_NUMBER = 9;
+        private const int START_PIN_NUMBER_LIGHT = 5;
+        private const int START_PIN_NUMBER_RELAY = 11;
+
+        private const int MAX_DEVICE_NUMBER_LIGHT = 6;
+        private const int MAX_DEVICE_NUMBER_RELAY = 3;
 
         public void GenerateFiles(MyGraph<Location> graph, ArduinoGroupWrapper arduinoGroup, string foldername)
         {
@@ -105,12 +108,11 @@ namespace DesktopUI.GeneratorSource
                 var arduinos = new List<Arduino>();
                 foreach (var segment in groupSegmentItem.Value)
                 {
-                    var deviceNumber = 0;
                     var currentArduino = new Arduino(groupSegmentItem.Key);
 
                     var segment1 = segment;
-                    deviceNumber = CreateArduinoCore(()=>segment1.Switches, deviceNumber, ref currentArduino, DeviceType.LightSwitchDeviceType, arduinos);
-                    CreateArduinoCore(() => segment1.Lights, deviceNumber, ref currentArduino, DeviceType.RelayDeviceType, arduinos);
+                    CreateArduinoSwitches(segment1.Switches, ref currentArduino, arduinos);
+                    CreateArduinoRelay(segment1.Lights, ref currentArduino, arduinos);
                     arduinos.Add(currentArduino);
                 }                
                 _arduinos.AddRange(ZipArduinos(arduinos));
@@ -141,7 +143,9 @@ namespace DesktopUI.GeneratorSource
                     prevArduino = arduino;
                     continue;
                 }
-                if ((prevArduino.Devices.Count + arduino.Devices.Count) < MAX_DEVICE_NUMBER)
+
+
+                if (Mergeable(prevArduino,arduino))
                 {
                     var newArduino = MergeArduino(prevArduino, arduino);
                     prevArduino = newArduino;
@@ -159,39 +163,80 @@ namespace DesktopUI.GeneratorSource
             return result;
         }
 
+        private bool Mergeable(Arduino prevArduino, Arduino arduino)
+        {
+            return
+                (prevArduino.Devices.Count(device => device.DeviceType == DeviceType.LightSwitchDeviceType.ToString()) +
+                 arduino.Devices.Count(device => device.DeviceType == DeviceType.LightSwitchDeviceType.ToString())
+                ) <= MAX_DEVICE_NUMBER_LIGHT &&
+                (prevArduino.Devices.Count(device => device.DeviceType == DeviceType.RelayDeviceType.ToString()) +
+                 arduino.Devices.Count(device => device.DeviceType == DeviceType.RelayDeviceType.ToString()
+                ) <= MAX_DEVICE_NUMBER_RELAY);
+
+        }
+
         private Arduino MergeArduino(Arduino prevArduino, Arduino arduino)
         {
             var result = new Arduino(prevArduino.Name);
 
-            var pinNumber = 1;
-            foreach (var device in prevArduino.Devices.Union(arduino.Devices).OrderBy(device => device.DeviceType))
+            var pinNumber = START_PIN_NUMBER_LIGHT;
+            foreach (var device in prevArduino.Devices.Where(device => device.DeviceType == DeviceType.LightSwitchDeviceType.ToString())
+                .Union(arduino.Devices.Where(device => device.DeviceType == DeviceType.LightSwitchDeviceType.ToString())))
             {
-                device.PinNumber = (pinNumber + START_PIN_NUMBER).ToString();
+                device.PinNumber = (pinNumber).ToString();
+                pinNumber++;
+                result.AddDevice(device);
+            }
+
+            pinNumber = START_PIN_NUMBER_RELAY;
+            foreach (var device in prevArduino.Devices.Where(device => device.DeviceType == DeviceType.RelayDeviceType.ToString())
+                .Union(arduino.Devices.Where(device => device.DeviceType == DeviceType.RelayDeviceType.ToString())))
+            {
+                device.PinNumber = (pinNumber).ToString();
                 pinNumber++;
                 result.AddDevice(device);
             }
           
+
             return result;
         }
 
-        private int CreateArduinoCore(Func<IEnumerable<BuildBlock>> buildBlockProvider, int deviceNumber, ref Arduino currentArduino, DeviceType deviceType, List<Arduino> arduinos)
+
+        private void CreateArduinoSwitches(IEnumerable<BuildBlock> switches, ref Arduino currentArduino, List<Arduino> arduinos)
         {
-            foreach (var buildBlockItem in buildBlockProvider())
+            var pinNumber = START_PIN_NUMBER_LIGHT;
+            foreach (var buildBlockItem in switches)
             {
-                deviceNumber++;
-                if (deviceNumber >= MAX_DEVICE_NUMBER)
+                if (pinNumber >= START_PIN_NUMBER_LIGHT + MAX_DEVICE_NUMBER_LIGHT)
                 {
                     arduinos.Add(currentArduino);
-                    var arduinoName = currentArduino.Name + "_1";
-                    currentArduino = new Arduino(arduinoName);
-                    deviceNumber = 1;
+                    currentArduino = new Arduino(currentArduino.Name);
+                    pinNumber = START_PIN_NUMBER_LIGHT;
                 }
 
-                currentArduino.AddDevice(new Device(deviceType, buildBlockItem.Name,
-                                                    deviceNumber + START_PIN_NUMBER));
+                currentArduino.AddDevice(new Device(DeviceType.LightSwitchDeviceType, buildBlockItem.Name, pinNumber));
+                pinNumber++;
+
             }
-            return deviceNumber;
         }
+
+        private void CreateArduinoRelay(IEnumerable<BuildBlock> relays, ref Arduino currentArduino, List<Arduino> arduinos)
+        {
+            var pinNumber = START_PIN_NUMBER_RELAY;
+            foreach (var buildBlockItem in relays)
+            {
+                if (pinNumber >= START_PIN_NUMBER_RELAY+MAX_DEVICE_NUMBER_RELAY)
+                {
+                    arduinos.Add(currentArduino);
+                    currentArduino = new Arduino(currentArduino.Name);
+                    pinNumber = START_PIN_NUMBER_RELAY;
+                }
+
+                currentArduino.AddDevice(new Device(DeviceType.RelayDeviceType, buildBlockItem.Name, pinNumber));
+                pinNumber++;
+            }
+        }
+
 
         private void CopyServerFolder(string foldername)
         {
