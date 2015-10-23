@@ -120,11 +120,16 @@ namespace DesktopUI.GeneratorSource
             _arduinos.Sort((x,y) => String.Compare(x.Name, y.Name, StringComparison.Ordinal));
 
             Arduino prevArduino = null;
+            string prevArduinoOriginalName = null;
             foreach (var arduino in _arduinos)
             {
-                if (arduino.Name == (prevArduino == null ? null :prevArduino.Name))
+                if (arduino.Name == prevArduinoOriginalName)
                 {
-                    arduino.Name += "I";
+                    arduino.Name = prevArduino.Name + "I";
+                }
+                else
+                {
+                    prevArduinoOriginalName = arduino.Name;
                 }
 
                 prevArduino = arduino;
