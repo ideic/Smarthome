@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Globalization;
 
 namespace DesktopUI.GeneratorSource
 {
     internal class IdentityGenerator
     {
-        private int _address = 0;
-        private int _sequentialId = 0;
+        private int _address;
+        private int _sequentialId;
         private byte _abc = (byte)'A';
 
         public string NextAddress()
@@ -24,7 +25,7 @@ namespace DesktopUI.GeneratorSource
 
         public string NextSequentialId()
         {
-            var result = _sequentialId.ToString(); 
+            var result = _sequentialId.ToString(CultureInfo.InvariantCulture); 
             _sequentialId++;
             return result;
         }

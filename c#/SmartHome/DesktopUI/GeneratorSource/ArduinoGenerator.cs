@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using DesktopUI.BuildBlocks;
@@ -61,10 +62,10 @@ namespace DesktopUI.GeneratorSource
 
             CopyFolderCore(folderName, () => GetClientFileContent(arduino), arduino.Name + ".Ino");
 
-            var clientFolder = Path.Combine(Directory.GetCurrentDirectory(), "GeneratorSource", "Client");
+            var clientFolderSource = Path.Combine(Directory.GetCurrentDirectory(), "GeneratorSource", "Client");
             var destinationFolder = Path.Combine(folder, arduino.Name);
 
-            foreach (var clientFile in Directory.GetFiles(clientFolder))
+            foreach (var clientFile in Directory.GetFiles(clientFolderSource))
             {
                 File.Copy(clientFile, Path.Combine(destinationFolder, Path.GetFileName(clientFile)));
             }
@@ -117,13 +118,19 @@ namespace DesktopUI.GeneratorSource
                 }                
                 _arduinos.AddRange(ZipArduinos(arduinos));
             }
-            _arduinos.Sort((x,y) => String.Compare(x.Name, y.Name, StringComparison.Ordinal));
+
+            MakeArduinoNameUnique();
+        }
+
+        private void MakeArduinoNameUnique()
+        {
+            _arduinos.Sort((x, y) => String.Compare(x.Name, y.Name, StringComparison.Ordinal));
 
             Arduino prevArduino = null;
             string prevArduinoOriginalName = null;
             foreach (var arduino in _arduinos)
             {
-                if (arduino.Name == prevArduinoOriginalName)
+                if (arduino.Name == prevArduinoOriginalName && prevArduino != null)
                 {
                     arduino.Name = prevArduino.Name + "I";
                 }
@@ -148,8 +155,6 @@ namespace DesktopUI.GeneratorSource
                     prevArduino = arduino;
                     continue;
                 }
-
-
                 if (Mergeable(prevArduino,arduino))
                 {
                     var newArduino = MergeArduino(prevArduino, arduino);
@@ -188,7 +193,7 @@ namespace DesktopUI.GeneratorSource
             foreach (var device in prevArduino.Devices.Where(device => device.DeviceType == DeviceType.LightSwitchDeviceType.ToString())
                 .Union(arduino.Devices.Where(device => device.DeviceType == DeviceType.LightSwitchDeviceType.ToString())))
             {
-                device.PinNumber = (pinNumber).ToString();
+                device.PinNumber = (pinNumber).ToString(CultureInfo.InvariantCulture);
                 pinNumber++;
                 result.AddDevice(device);
             }
@@ -197,7 +202,7 @@ namespace DesktopUI.GeneratorSource
             foreach (var device in prevArduino.Devices.Where(device => device.DeviceType == DeviceType.RelayDeviceType.ToString())
                 .Union(arduino.Devices.Where(device => device.DeviceType == DeviceType.RelayDeviceType.ToString())))
             {
-                device.PinNumber = (pinNumber).ToString();
+                device.PinNumber = (pinNumber).ToString(CultureInfo.InvariantCulture);
                 pinNumber++;
                 result.AddDevice(device);
             }

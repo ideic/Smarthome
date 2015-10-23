@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Forms;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
@@ -85,9 +84,7 @@ namespace DesktopUI
 
         private void OpenOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
-            var openFileDialog = new OpenFileDialog();
-            openFileDialog.DefaultExt = "smh";
-            openFileDialog.Filter = "SmartHome Files|*.smh";
+            var openFileDialog = new OpenFileDialog {DefaultExt = "smh", Filter = "SmartHome Files|*.smh"};
             var showDialog = openFileDialog.ShowDialog();
             if (((bool) showDialog))
             {
@@ -143,8 +140,8 @@ namespace DesktopUI
                 _mainViewModel.GenerateArduinos(folder.SelectedPath);
             }
 
-            System.Windows.Forms.MessageBox.Show("Generation finished, please check folder: " + folder.SelectedPath,
-                                                           "Generation finsihed", MessageBoxButtons.OK,
+            System.Windows.Forms.MessageBox.Show(@"Generation finished, please check folder: " + folder.SelectedPath,
+                                                           @"Generation finsihed", MessageBoxButtons.OK,
                                                            MessageBoxIcon.Information);
 
         }

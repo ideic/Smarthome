@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using DesktopUI.GeneratorSource.Server;
 
 namespace DesktopUI.GeneratorSource
 {
     public class Segment
     {
         private readonly List<BuildBlock> _switches = new List<BuildBlock>();
-        private List<BuildBlock> _lights = new List<BuildBlock>();
+        private readonly List<BuildBlock> _lights = new List<BuildBlock>();
         public string Name { get; private set; }
         public string Index { get; private set; }
 

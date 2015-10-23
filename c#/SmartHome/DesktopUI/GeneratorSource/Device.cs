@@ -1,4 +1,6 @@
-﻿namespace DesktopUI.GeneratorSource
+﻿using System.Globalization;
+
+namespace DesktopUI.GeneratorSource
 {
     public class Device
     {
@@ -6,7 +8,7 @@
         {
             DeviceType = deviceType.ToString();
             Name = name;
-            PinNumber = pinNumber.ToString();
+            PinNumber = pinNumber.ToString(CultureInfo.InvariantCulture);
         }
 
         public string PinNumber { get; set; }

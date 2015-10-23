@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace DesktopUI.GeneratorSource
@@ -34,12 +35,12 @@ namespace DesktopUI.GeneratorSource
 
         public string SwitchNumbers
         {
-            get { return Switches.Count.ToString();}
+            get { return Switches.Count.ToString(CultureInfo.InvariantCulture);}
         }
 
         public string LightNumbers
         {
-            get { return Lights.Count.ToString(); }
+            get { return Lights.Count.ToString(CultureInfo.InvariantCulture); }
         }
         
     }

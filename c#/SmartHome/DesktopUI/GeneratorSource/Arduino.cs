@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 
 namespace DesktopUI.GeneratorSource
 {
@@ -11,7 +12,7 @@ namespace DesktopUI.GeneratorSource
         }
 
         public string DevicesNumber 
-        { get { return Devices.Count.ToString(); }}
+        { get { return Devices.Count.ToString(CultureInfo.InvariantCulture); }}
 
         public ICollection<Device> Devices { get; private set; }
 
