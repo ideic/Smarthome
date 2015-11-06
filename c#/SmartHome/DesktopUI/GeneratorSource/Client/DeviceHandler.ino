@@ -11,16 +11,18 @@ void LightSwitchDevice::SetUp(){
 };
 
 bool LightSwitchDevice::IsDeviceOn(){
-  bool isLightOn = false;
-  
-  if (digitalRead(GetPinNumber()) == LOW) {
-    // Wait 5 miliseconds, because of perk effect
+  bool prevValue = digitalRead(GetPinNumber());
+  delay(5);
+  bool currentValue = digitalRead(GetPinNumber());
+
+  // Wait 5 miliseconds, because of perk effect
+  while (prevValue != currentValue) {
     delay(5);
-    if (digitalRead(GetPinNumber()) == LOW) {
-      isLightOn = true;
-    }
+    prevValue = currentValue;
+    currentValue = digitalRead(GetPinNumber());
   }
-  return isLightOn; 
+  
+  return currentValue;
 }
 
 RelayDevice::RelayDevice(int address, int pinNumber) :  DeviceBase (address, pinNumber), _isRelayOn(false){
