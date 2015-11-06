@@ -1,5 +1,5 @@
 # Smarthome
-Smarthome is a project how to manage elctric things in the house.
+Smarthome is a project how to manage electric things in the house.
 
 As a first step I focused on lamps and their switches.
 
