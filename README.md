@@ -17,4 +17,4 @@ Benefits over a standard alternate switch or traditional switch - light connecti
 - switch and light connection are dynamic => you can change it without phisical act
 - cheap ( arduino, utp cable (for communication and to switches, lights need small diameter cable)
 - Additional feature can be intorduced, like random light on/off, to imitate owners at home (safe home), or you can be notified if someone uses the lights, or you can remote control it => possibilities are endless (but not shipped yet)
--  
+ 
