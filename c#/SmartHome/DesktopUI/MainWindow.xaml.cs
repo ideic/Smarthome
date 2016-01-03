@@ -44,6 +44,7 @@ namespace DesktopUI
             Open.Click += OpenOnClick;
             Save.Click += SaveOnClick;
             Generate.Click += GenerateOnClick;
+            Print.Click += PrintOnClick;
 
         }
 
@@ -103,6 +104,15 @@ namespace DesktopUI
                 _mainViewModel.SaveGraph(saveFileDialog.FileName);
             }
   
+        }
+
+        private void PrintOnClick(object sender, RoutedEventArgs e)
+        {
+            var printDialog = new System.Windows.Controls.PrintDialog();
+            if (printDialog.ShowDialog() == true)
+            {
+                printDialog.PrintVisual(GraphLayout, "Graph");
+            }
         }
 
         private void RemoveSwitchFromLightOnClick(object sender, RoutedEventArgs routedEventArgs)

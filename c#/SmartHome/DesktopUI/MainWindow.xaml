@@ -189,8 +189,9 @@
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="Open" Margin="10,0,10,0" Width="100">Open</Button>
                     <Button x:Name="Save" Margin="10,0,10,0" Width="100">Save</Button>
-                    <Button x:Name="Generate" Width="100">Generate</Button>
-                </StackPanel>
+                    <Button x:Name="Generate" Margin="10,0,10,0" Width="100">Generate</Button>
+                    <Button x:Name="Print" Width="100">Print</Button>
+               </StackPanel>
             </StackPanel>
             
         </StackPanel>
